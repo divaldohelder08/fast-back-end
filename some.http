@@ -1,0 +1,8 @@
+POST   http://localhost:3333/manager/authenticate
+Content-Type: application/json
+
+{
+          "email": "julia.albuquerque34@mukumbo.dev",
+          "password":"0000",
+          "filialId": "da67b5d2-c5d9-4f01-bc78-b69785da5d1e"
+        }
