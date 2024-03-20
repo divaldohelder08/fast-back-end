@@ -20,11 +20,10 @@ export async function seedRecolhas({ recolhas: recolhasLength }: seedRecolhasPro
     for (const recolha of recolhas) {
       await db.recolha.create({
         data: {
-          clienteId: faker.helpers.arrayElement(filialClients).id,
+          clientId: faker.helpers.arrayElement(filialClients).id,
           driverId: faker.helpers.arrayElement(filialDrivers).id,
           filialId: filial.id,
           status: faker.helpers.arrayElement([
-            "andamento",
             "cancelada",
             "finalizada",
           ]),
@@ -35,6 +34,26 @@ export async function seedRecolhas({ recolhas: recolhasLength }: seedRecolhasPro
       });
     }
   }
+
+
+
+  for (const recolha of recolhas) {
+      await db.recolha.create({
+        data: {
+          clientId: faker.helpers.arrayElement(filialClients).id,
+          driverId: faker.helpers.arrayElement(filialDrivers).id,
+          filialId: filial.id,
+          status: faker.helpers.arrayElement([
+            "andamento",
+          ]),
+          distance: faker.number.float().toString(),
+          directions: JSON.stringify(faker.science.chemicalElement(), null, 2),
+        },
+      });
+    }
+  }
+
+
 
   for (const filial of filias) {
     const filialDrivers = await db.driver.findMany({
@@ -47,7 +66,7 @@ export async function seedRecolhas({ recolhas: recolhasLength }: seedRecolhasPro
     for (const recolha of recolhas) {
       await db.recolha.create({
         data: {
-          clienteId: faker.helpers.arrayElement(filialClients).id,
+          clientId: faker.helpers.arrayElement(filialClients).id,
           driverId: faker.helpers.arrayElement(filialDrivers).id,
           filialId: filial.id,
           status:"pendente",

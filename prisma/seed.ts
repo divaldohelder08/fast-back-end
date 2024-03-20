@@ -1,13 +1,13 @@
 import chalk from "chalk";
-import { seedPayments } from "./use/payments.seed";
 import { seedFull } from "./use/full.seed";
 import { seedSuperManagers } from "./use/supermanager.seed";
 import { seedRecolhas } from "./use/recolha.seed";
 import { db } from "../src/db/connection";
+import { seedClients } from "./use/clients.seed";
 
 await seedSuperManagers();
-await seedFull({ clients: 13, drivers: 20 });
-await seedPayments();
+await seedFull({  drivers: 20 });
+await seedClients({clients: 13})
 await seedRecolhas({ recolhas: 51 });
 console.table({
   clients: await db.client.count(),

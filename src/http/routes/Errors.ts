@@ -9,3 +9,9 @@ export class NotAManagerError extends Error {
     super("User is not a manager.");
   }
 }
+
+export class NotAgentError extends Error {
+  constructor() {
+    super("User is not a Agent.");
+  }
+}

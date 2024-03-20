@@ -9,7 +9,7 @@ export const getClientById = new Elysia().get(
     const heatData = await db.recolha.groupBy({
       by: ["createdAt"],
       where: {
-        clienteId: id,
+        clientId: id,
         status: {
           in: ["finalizada", "cancelada"],
         },
@@ -55,5 +55,5 @@ export const getClientById = new Elysia().get(
     params: t.Object({
       id: t.String(),
     }),
-  },
+  }
 );

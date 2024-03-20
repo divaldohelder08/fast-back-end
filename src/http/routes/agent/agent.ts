@@ -1,33 +1,35 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { AuthManager } from "../../middleware/manager";
-import { ManagerUseCase } from "./manager-usecase";
+import { AgentUseCase } from "./agent-usecase";
 import { Client } from "./client/client";
 import { Recolha } from "./recolha/recolha";
 import { Driver } from "./driver/driver";
 import { Settings } from "./settings/settings";
 import { Metrics } from "./metrics/metrics";
-import { Agent } from "./agents/agent";
+import { AgentMiddleware } from "../../middleware/agent";
+// import { Agent } from "./agents/agent";
 
 export const authenticateSchema = z.object({
   email: z.string().email({ message: "Formato de email inválido" }),
-  filialId: z.string(),
   password: z.string(),
 });
 export type authenticateData = z.infer<typeof authenticateSchema>;
 
-export const filialStatuSchema = z.object({
-  status: z.enum(["aberta", "fechado"]),
-});
-export type filialStatusData = z.infer<typeof filialStatuSchema>;
-export async function Manager(fastify: FastifyInstance) {
-  const managerUseCase = new ManagerUseCase();
-  fastify.addHook("preHandler", AuthManager);
+
+export const makePayment=z.object({
+  clientId:z.string(),
+})
+
+
+export async function Agent(fastify: FastifyInstance) {
+  const agentUseCase = new AgentUseCase();
+  fastify.addHook("preHandler", AgentMiddleware);
   fastify.get("/profile", async (req, reply) => {
     const user = req.user;
     if (!user) return reply.code(401).send({ message: "Token invalid" });
     try {
-      const profile = await managerUseCase.profile({
+      const profile = await agentUseCase.profile({
         id: user.id,
         filialId: user.filialId,
       });
@@ -42,7 +44,7 @@ export async function Manager(fastify: FastifyInstance) {
     if (!user) return reply.code(401).send({ message: "Token invalid" });
     const { status } = filialStatuSchema.parse(req.body);
     try {
-      const up = await managerUseCase.updateFilialStatus({
+      const up = await agentUseCase.updateFilialStatus({
         filial: { status },
         id: user.id,
         filialId: user.filialId,
@@ -63,15 +65,15 @@ export async function Manager(fastify: FastifyInstance) {
     prefix: "/agents",
   });
   fastify.register(Recolha, {
-    prefix:"/recolhas"
-  })
+    prefix: "/recolhas",
+  });
   fastify.register(Driver, {
-    prefix:"/drivers"
-  })
+    prefix: "/drivers",
+  });
   fastify.register(Settings, {
-    prefix:"/settings"
-  })
+    prefix: "/settings",
+  });
   fastify.register(Metrics, {
-    prefix:"/metrics"
-  })
+    prefix: "/metrics",
+  });
 }

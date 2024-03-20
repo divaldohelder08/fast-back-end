@@ -3,7 +3,7 @@ import { seedRecolhas } from "../db/setRecolhas";
 import { Finds } from "./routes/finds/finds";
 import { Manager, authenticateSchema } from "./routes/manager/manager";
 import { ManagerUseCase } from "./routes/manager/manager-usecase.ts";
-
+import { db } from "../db/connection";
 const app = fastify();
 
 app.register(Finds, {
@@ -13,18 +13,30 @@ app.register(Finds, {
 app.register(Manager, {
   prefix: "/manager",
 });
+app.get("/managers", async (req, reply) => {
+  try {
+    return reply.send( await db.filial.findMany({
+      select: { name: true, manager: {select :{ email:true }}}
+    }));
+  } catch (error) {
+    console.error(error);
+    reply.code(404).send(error)
+  }
+});
+
+
 app.post("/manager/authenticate", async (req, reply) => {
   const managerUseCase = new ManagerUseCase();
   const { email, filialId, password } = authenticateSchema.parse(req.body);
   try {
-    const thing = await managerUseCase.authenticate({
+    return reply.send(await managerUseCase.authenticate({
       email,
       filialId,
       password,
-    });
-    return reply.send(thing);
+    }));
   } catch (error) {
     console.error(error);
+    reply.code(404).send(error)
   }
 });
 

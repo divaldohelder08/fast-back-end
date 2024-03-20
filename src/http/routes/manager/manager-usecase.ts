@@ -14,42 +14,12 @@ interface filialStatusProps extends decodedUserProps {
 interface recolhaByIdProps extends decodedUserProps {
   recolhaId: string;
 }
+interface deleteClientProps extends decodedUserProps {
+  clintId: string;
+  key: string;
+}
 
 export class ManagerUseCase {
-  async recolha({ filialId }: decodedUserProps) {
-    const startDate = dayjs().subtract(1, "M");
-    return await db.recolha.findMany({
-      where: {
-        filialId,
-        createdAt: {
-          gte: startDate.startOf("day").toDate(),
-        },
-      },
-      select: {
-        id: true,
-        client: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            avatar: true,
-            createdAt: true,
-          },
-        },
-        driver: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            avatar: true,
-            createdAt: true,
-          },
-        },
-        status: true,
-        createdAt: true,
-      },
-    });
-  }
   async clients({ filialId }: decodedUserProps) {
     return await db.client.findMany({
       where: {
@@ -73,14 +43,11 @@ export class ManagerUseCase {
       select: {
         id: true,
         name: true,
-        email: true,
         avatar: true,
+        email: true,
+        role: true,
         createdAt: true,
-        filial: {
-          select: {
-            name: true,
-          },
-        },
+        tel: true,
       },
     });
   }
@@ -127,7 +94,6 @@ export class ManagerUseCase {
     console.log(user);
     if (!user || !user.manager) {
       console.log("erro");
-
       throw new Error("Credenciais inválidas");
     }
     const userInfo = {
@@ -135,7 +101,6 @@ export class ManagerUseCase {
       name: user.manager.name,
       email: user.manager.email,
       avatar: user.manager.avatar,
-      role: "manager",
       filial: {
         id: user.id,
         name: user.name,
@@ -155,43 +120,5 @@ export class ManagerUseCase {
       token,
     };
   }
-  async recolhaById({ recolhaId, filialId }: recolhaByIdProps) {
-    return await db.recolha.findFirstOrThrow({
-      where: {
-        id: recolhaId,
-        filialId: {
-          equals: filialId,
-        },
-      },
-      select: {
-        id: true,
-        status: true,
-        createdAt: true,
-        duration: true,
-        distance: true,
-        client: {
-          select: {
-            name: true,
-            tel: true,
-            email: true,
-          },
-        },
-        driver: {
-          select: {
-            name: true,
-            veiculo: {
-              select: {
-                matricula: true,
-              },
-            },
-          },
-        },
-        filial: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    });
-  }
+
 }

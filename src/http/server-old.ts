@@ -24,24 +24,7 @@
 //     }),
 //   )
 //   .use(FindPlace)
-//   .use(GetRecolhaById)
 //   .group("/find", (app) => {
-//     return app
-//       .get("/filias", () =>
-//         db.filial.findMany({ select: { id: true, name: true } }),
-//       )
-//       .get("/drivers", async () => {
-//         return await db.driver.findMany();
-//       })
-//       .get("/clients", async () => {
-//         return await db.client.findMany();
-//       })
-//       .get("/managers", async () => {
-//         return await db.manager.findMany();
-//       })
-//       .get("/recolha", async () => {
-//         return await db.recolha.findMany();
-//       })
 //       .get(
 //         "/filial/:id",
 //         async ({ params }) => {
@@ -66,10 +49,3 @@
 // //   // set.headers('Content-Disposition', 'attachment; filename=agendamento.pdf');
 // //   return Bun.file("src/agendamento.pdf");
 // // });
-// setInterval(async () => {
-//   await seedRecolhas();
-// }, Math.floor(Math.random() * 50000));
-// app.listen(3333);
-// console.log(
-//   `🔥 HTTP server running at http://${app.server?.hostname}:${app.server?.port}`,
-// );

@@ -1,7 +1,6 @@
-import { db } from "./connection";
 import { fakerPT_BR as faker } from "@faker-js/faker";
 import chalk from "chalk";
-import dayjs from "dayjs";
+import { db } from "./connection";
 // import { hackId } from "../lib/hack";
 
 export async function seedRecolhas() {
@@ -18,7 +17,7 @@ export async function seedRecolhas() {
 
   await db.recolha.create({
     data: {
-      clienteId: faker.helpers.arrayElement(filialClients).id,
+      clientId: faker.helpers.arrayElement(filialClients).id,
       driverId: faker.helpers.arrayElement(filialDrivers).id,
       filialId: filial?.id,
       status: faker.helpers.arrayElement([
@@ -35,7 +34,7 @@ export async function seedRecolhas() {
 
   await db.recolha.create({
     data: {
-      clienteId: faker.helpers.arrayElement(filialClients).id,
+      clientId: faker.helpers.arrayElement(filialClients).id,
       driverId: faker.helpers.arrayElement(filialDrivers).id,
       filialId: filial?.id,
       status: "pendente",
