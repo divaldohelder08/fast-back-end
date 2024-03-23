@@ -14,7 +14,7 @@ CREATE TYPE "RoleEnum" AS ENUM ('superGerente', 'gerente');
 CREATE TYPE "PaymentStatus" AS ENUM ('npago', 'pago');
 
 -- CreateEnum
-CREATE TYPE "DriverStatus" AS ENUM ('On', 'Off');
+CREATE TYPE "GlobalStatus" AS ENUM ('On', 'Off');
 
 -- CreateEnum
 CREATE TYPE "Sexo" AS ENUM ('M', 'F');
@@ -40,7 +40,7 @@ CREATE TABLE "Filial" (
     "id" TEXT NOT NULL,
     "manager_id" TEXT,
     "name" VARCHAR(100) NOT NULL,
-    "telefone" VARCHAR(12) NOT NULL,
+    "telefone" VARCHAR(9) NOT NULL,
     "address" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "status" "FilialStatus" NOT NULL DEFAULT 'fechado',
@@ -54,7 +54,7 @@ CREATE TABLE "Filial" (
 -- CreateTable
 CREATE TABLE "veiculo" (
     "id" TEXT NOT NULL,
-    "matricula" VARCHAR(11) NOT NULL,
+    "matricula" VARCHAR(8) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -71,10 +71,10 @@ CREATE TABLE "driver" (
     "name" VARCHAR(150) NOT NULL,
     "email" TEXT NOT NULL,
     "sexo" "Sexo" NOT NULL,
-    "status" "DriverStatus" NOT NULL DEFAULT 'Off',
+    "status" "GlobalStatus" NOT NULL DEFAULT 'Off',
     "coordenadas" DOUBLE PRECISION[] DEFAULT ARRAY[0, 0]::DOUBLE PRECISION[],
     "senha" TEXT NOT NULL DEFAULT '0000',
-    "telefone" VARCHAR(12) NOT NULL,
+    "telefone" VARCHAR(9) NOT NULL,
     "nascimento" TIMESTAMP(3) NOT NULL,
     "avatar" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -101,7 +101,7 @@ CREATE TABLE "Client" (
     "email" TEXT NOT NULL,
     "paymentId" TEXT NOT NULL,
     "number_bi" VARCHAR(13) NOT NULL,
-    "tel" VARCHAR(12) NOT NULL,
+    "tel" VARCHAR(9) NOT NULL,
     "sexo" "Sexo" NOT NULL,
     "role" "ClientRole" NOT NULL DEFAULT 'comercial',
     "avatar" TEXT,
@@ -123,6 +123,7 @@ CREATE TABLE "Agents" (
     "name" VARCHAR(250) NOT NULL,
     "email" TEXT NOT NULL,
     "sexo" "Sexo" NOT NULL,
+    "status" "GlobalStatus" NOT NULL DEFAULT 'Off',
     "telefone" VARCHAR(9),
     "senha" TEXT NOT NULL DEFAULT '0000',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

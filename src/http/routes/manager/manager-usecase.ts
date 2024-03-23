@@ -1,23 +1,7 @@
 import { db } from "../../../db/connection";
-import dayjs from "dayjs";
-import type { authenticateData, filialStatusData } from "./manager";
+import type { authenticateData } from "./manager";
 import { encrypt } from "../../../lib/jose";
-
-interface decodedUserProps {
-  id: string;
-  filialId: string;
-}
-
-interface filialStatusProps extends decodedUserProps {
-  filial: filialStatusData;
-}
-interface recolhaByIdProps extends decodedUserProps {
-  recolhaId: string;
-}
-interface deleteClientProps extends decodedUserProps {
-  clintId: string;
-  key: string;
-}
+import type { decodedUserProps } from "../../../../index-types";
 
 export class ManagerUseCase {
   async clients({ filialId }: decodedUserProps) {
@@ -32,6 +16,9 @@ export class ManagerUseCase {
         numberBI: true,
         nascimento: true,
         createdAt: true,
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
   }
@@ -48,19 +35,6 @@ export class ManagerUseCase {
         role: true,
         createdAt: true,
         tel: true,
-      },
-    });
-  }
-  async updateFilialStatus({
-    filial: { status },
-    filialId,
-  }: filialStatusProps) {
-    return db.filial.update({
-      where: {
-        id: filialId,
-      },
-      data: {
-        status,
       },
     });
   }
@@ -120,5 +94,4 @@ export class ManagerUseCase {
       token,
     };
   }
-
 }

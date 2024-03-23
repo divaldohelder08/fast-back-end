@@ -1,10 +1,14 @@
 import dayjs from "dayjs";
 import { db } from "../../../../db/connection";
 import type { decodedUserFilialIdProps, deleteRecolhaProps, recolhaByIdProps } from "../../../../../index-types";
+interface findRecolhaProps extends decodedUserFilialIdProps {
+  client: string,
+  driver: string
+}
 
 
 export class RecolhaUseCase {
-  async find({ filialId }: decodedUserFilialIdProps) {
+  async find({ filialId, client: clientName, driver: driverName }: findRecolhaProps) {
     const startDate = dayjs().subtract(1, "M");
     return await db.recolha.findMany({
       where: {
@@ -12,6 +16,16 @@ export class RecolhaUseCase {
         createdAt: {
           gte: startDate.startOf("day").toDate(),
         },
+        client: {
+          name: {
+            contains: clientName
+          }
+        }
+        , driver: {
+          name: {
+            contains: driverName
+          }
+        }
       },
       select: {
         id: true,
@@ -39,8 +53,8 @@ export class RecolhaUseCase {
     });
   }
   async findById({ recolhaId, filialId }: recolhaByIdProps) {
-  console.log("aqui")
-    const recolha= await db.recolha.findFirst({
+    console.log("aqui")
+    const recolha = await db.recolha.findFirst({
       where: {
         id: recolhaId,
         filialId: {
@@ -77,28 +91,21 @@ export class RecolhaUseCase {
         },
       },
     });
-    if(!recolha){
+    if (!recolha) {
       throw new Error("Recolha não encontrada!")
     }
     return recolha
   }
-  async delete({ id, key, clintId, filialId }: deleteRecolhaProps) {
-    if (
-      !(await db.manager.findUnique({
-        where: {
-          id,
-          password: key,
-        },
-      }))
-    ) {
-      throw Error("Senha do manager incorreta");
-    }
+  async delete({ id, filialId, recolhaId }: deleteRecolhaProps) {
 
     if (
       !(await db.recolha.findUnique({
         where: {
-          id: clintId,
-          filialId,
+          id: recolhaId,
+          filial: {
+            id: filialId,
+            managerId: id
+          }
         },
       }))
     ) {
@@ -107,8 +114,7 @@ export class RecolhaUseCase {
 
     await db.recolha.delete({
       where: {
-        id: clintId,
-        filialId,
+        id: recolhaId,
       },
     });
   }

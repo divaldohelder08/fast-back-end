@@ -1,24 +1,34 @@
 import type { FastifyInstance } from "fastify";
-import { SettingsUsecase } from "./settings.usecase";
+import { SettingsUseCase } from "./settings-usecase";
 import { z } from "zod";
+import { pdf } from "./pdf/pdf";
 
 const updateKeySchema = z.object({
   antiga: z.string(),
-  nova: z.string()
+  nova: z.string().min(6, "Min 6").max(15, "Max 15"),
 });
 
 const updateProfileSchema = z.object({
-  name: z.string().min(3, "Min 3").max(255, "Max 255"),
-  email: z.string().min(3, "Min 3").max(255, "Max 255"),
+  name: z.string().min(10, "Min 10").max(255, "Max 255"),
+  email: z.string().min(10, "Min 10").max(255, "Max 255"),
   avatar: z.string().nullable(),
 });
 
 const updateTelSchema = z.object({
-  tel: z.string().min(9, "Min 9").max(9, "Max 9"),
+  tel: z
+    .string()
+    .min(9, "Min 9")
+    .max(9, "Max 9")
+    .regex(/9[1-5][0-9]{7}/, "Número invalido"),
 });
 
+export const filialStatuSchema = z.object({
+  status: z.enum(["aberta", "fechado"]),
+});
+
+export type filialStatusData = z.infer<typeof filialStatuSchema>;
 export async function Settings(fastify: FastifyInstance) {
-  const settingsUseCase = new SettingsUsecase();
+  const settingsUseCase = new SettingsUseCase();
   fastify.get("/get-over-view", async (req, reply) => {
     const user = req.user;
     if (!user) return reply.code(401).send({ message: "Token invalid" });
@@ -29,9 +39,7 @@ export async function Settings(fastify: FastifyInstance) {
       return reply.send(overView);
     } catch (error) {
       console.error(error);
-      reply
-        .code(500)
-        .send({ message: "Erro ao buscar visão geral da filial!" });
+      reply.send(error);
     }
   });
   fastify.patch("/update-key", async (req, reply) => {
@@ -47,7 +55,7 @@ export async function Settings(fastify: FastifyInstance) {
       return reply.code(204).send("Senha atualizada com sucesso!");
     } catch (error) {
       console.error(error);
-      reply.code(500).send({ message: "Erro ao atualizar senha!" });
+      reply.code(500).send(error);
     }
   });
   fastify.patch("/update-profile", async (req, reply) => {
@@ -79,9 +87,28 @@ export async function Settings(fastify: FastifyInstance) {
       return reply.code(204).send("Telefone atualizado com sucesso!");
     } catch (error) {
       console.error(error);
-      reply.code(500).send({ message: "Erro ao atualizar telefone!" });
+      reply.send(error);
     }
+  });
+  fastify.patch("/update-status", async (req, reply) => {
+    const user = req.user;
+    if (!user) return reply.code(401).send({ message: "Token invalid" });
+    const { status } = filialStatuSchema.parse(req.body);
+    try {
+      const up = await settingsUseCase.updateFilialStatus({
+        status,
+        filialId: user.filialId,
+      });
+      if (!up) {
+        throw new Error("Erro ao atualizar status da filial");
+      }
+      return reply.code(200).send();
+    } catch (error) {
+      console.error(error);
+      reply.send(error)
+    }
+  });
+  fastify.register(pdf, {
+    prefix:"/pdf"
   })
 }
-
-

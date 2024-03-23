@@ -2,7 +2,6 @@ import { fakerPT_BR as faker } from "@faker-js/faker";
 import chalk from "chalk";
 import { db } from "../../src/db/connection";
 import dayjs from "dayjs";
-// Spell:ignore Currentclient
 interface seedFullProps {
   drivers: number;
 }
@@ -38,10 +37,7 @@ export enum sexo {
   feminino = "F",
 }
 
-enum ClientRole {
-  residencial = "residencial",
-  comercial = "comercial",
-}
+
 
 export async function seedFull({
   drivers: driversLength,
@@ -141,7 +137,7 @@ export async function seedFull({
               veiculo: {
                 create: {
                   matricula: faker.helpers
-                    .fromRegExp(/LD-[0-9]{2}-[0-9]{2}-[^0-9]{2}/)
+                    .fromRegExp(/LD[0-9]{2}[0-9]{2}[^0-9]{2}/)
                     .toUpperCase(),
                 },
               },

@@ -4,6 +4,9 @@ import type { z } from "zod";
 
 
 
+export interface geoMapFilter extends decodedUserFilialIdProps{
+  numberBI:string
+}
 
 
 declare module "fastify" {
@@ -48,8 +51,7 @@ interface driverByIdProps  {
   driverId: string;
 }
 export interface deleteRecolhaProps extends decodedUserProps {
-  clintId: string;
-  key: string;
+  recolhaId: string;
 }
 
 

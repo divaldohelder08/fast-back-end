@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import type {
   decodedUserFilialIdProps,
   driverByIdExtendedProps,
+  geoMapFilter,
 } from "../../../../../index-types";
 import { db } from "../../../../db/connection";
 import type { createDriverProps, updateStatusData } from "./driver";
@@ -245,15 +246,19 @@ export class DriverUseCase {
     });
     return
   }
-  async geoMap({ filialId }: decodedUserFilialIdProps) {
+  async geoMap({ filialId, numberBI }: geoMapFilter) {
     return await db.driver.findMany({
       select: {
         id: true,
+        numberBI:true,
         name: true,
         coordenadas: true,
       },
       where: {
         filialId,
+        numberBI: {
+          contains: numberBI
+        }
       },
     });
   }

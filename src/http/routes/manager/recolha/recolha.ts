@@ -7,10 +7,16 @@ export async function Recolha(fastify: FastifyInstance) {
   fastify.get("/", async (req, reply) => {
     const user = req.user;
     if (!user) return reply.code(401).send({ message: "Token invalid" });
+    const { client, driver } = z.object({
+      client: z.string(),
+      driver: z.string()
+    }).parse(req.query)
     try {
       return reply.send(
         await recolhaUseCase.find({
           filialId: user.filialId,
+          client,
+          driver
         })
       );
     } catch (error) {
@@ -19,6 +25,7 @@ export async function Recolha(fastify: FastifyInstance) {
     }
   });
   fastify.get("/:id", async (req, reply) => {
+  console.log("aqui")
     const { id } = z
       .object({
         id: z.string(),
@@ -40,22 +47,17 @@ export async function Recolha(fastify: FastifyInstance) {
   fastify.delete("/:id", async (req, reply) => {
     const user = req.user;
     if (!user) return reply.code(401).send({ message: "Token invalid" });
+    console.log("deletando")
     const { id } = z
       .object({
         id: z.string(),
       })
       .parse(req.params);
-    const { key } = z
-      .object({
-        key: z.string(),
-      })
-      .parse(req.body);
     try {
       await recolhaUseCase.delete({
         filialId: user.filialId,
         id: user.id,
-        key,
-        clintId: id,
+        recolhaId: id
       });
       return reply.code(200).send("Recolha deletada com sucesso");
     } catch (error) {

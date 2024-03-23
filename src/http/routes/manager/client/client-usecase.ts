@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import type {
   clientByIdProps,
   decodedUserFilialIdProps,
+  geoMapFilter,
 } from "../../../../../index-types";
 import { db } from "../../../../db/connection";
 
@@ -9,6 +10,7 @@ interface decodedUserProps {
   id: string;
   filialId: string;
 }
+
 
 interface deleteClientProps extends decodedUserProps {
   clintId: string;
@@ -112,15 +114,19 @@ export class ClientUseCase {
       }),
     };
   }
-  async geoMap({ filialId }: decodedUserFilialIdProps) {
+  async geoMap({ filialId, numberBI }: geoMapFilter) {
     return await db.client.findMany({
       select: {
-        id: true,
+        id:true,
+        numberBI: true,
         name: true,
         coordenadas: true,
       },
       where: {
         filialId,
+        numberBI:{
+          contains:numberBI
+        }
       },
     });
   }

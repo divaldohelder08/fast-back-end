@@ -9,7 +9,7 @@ const createDriverSchema = z.object({
     .max(13, "Max 13")
     .regex(/[^a-zA-Z]{9}[^a-z0-9]{2}[^a-zA-Z]{2}/, "Número de bi invalido"),
   name: z.string().min(10, "Min 13").max(255, "Max 255"),
-  avatar: z.string().optional(),
+  avatar: z.string().nullable(),
   tel: z
     .string()
     .min(9, "Min 9")
@@ -19,9 +19,9 @@ const createDriverSchema = z.object({
   nascimento: z.string(),
   matricula: z
     .string()
-    .min(11, "Min 11")
-    .max(11, "Max 11")
-    .regex(/LD-[0-9]{2}-[0-9]{2}-[^0-9]{2}/, "Matricula invalida"),
+    .min(8, "Min 8")
+    .max(8, "Max 8")
+    .regex(/LD[0-9]{2}[0-9]{2}[^0-9]{2}/, "Matricula invalida"),
   sexo: z.enum(["M", "F"]),
 });
 
@@ -66,10 +66,14 @@ export async function Driver(fastify: FastifyInstance) {
   fastify.get("/geo-map", async (req, reply) => {
     const user = req.user;
     if (!user) return reply.code(401).send({ message: "Token invalid" });
+    const { numberBI } = z.object({
+      numberBI: z.string()
+    }).parse(req.query)
     try {
       return reply.send(
         await driverUseCase.geoMap({
           filialId: user.filialId,
+          numberBI
         })
       );
     } catch (error) {
@@ -80,8 +84,8 @@ export async function Driver(fastify: FastifyInstance) {
   fastify.post("/create", async (req, reply) => {
     const user = req.user;
     if (!user) return reply.code(401).send({ message: "Token invalid" });
-    const { numberBI, name, tel, email, nascimento, matricula, sexo, avatar } =
-      createDriverSchema.parse(req.body);
+    const { numberBI, name, tel, email, nascimento, matricula, sexo, avatar } = createDriverSchema.parse(req.body);
+      console.log("criando")
     try {
       await driverUseCase.create({
         numberBI,
@@ -105,7 +109,7 @@ export async function Driver(fastify: FastifyInstance) {
       .object({
         key: z.string(),
       })
-      .parse(req.body);
+      .parse(req.query);
     const { id } = z
       .object({
         id: z.string(),

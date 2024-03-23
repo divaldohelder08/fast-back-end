@@ -69,16 +69,20 @@ export async function Client(fastify: FastifyInstance) {
   fastify.get("/geo-map", async (req, reply) => {
     const user = req.user;
     if (!user) return reply.code(401).send({ message: "Token invalid" });
+    const { numberBI } = z.object({
+      numberBI: z.string()
+    }).parse(req.query)
+
     try {
       return reply.send(
         await clientUseCase.geoMap({
           filialId: user.filialId,
+          numberBI
         })
       );
     } catch (error) {
       console.error(error);
       reply.send(error);
-
     }
   });
 }

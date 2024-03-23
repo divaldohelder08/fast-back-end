@@ -16,10 +16,6 @@ export const authenticateSchema = z.object({
 });
 export type authenticateData = z.infer<typeof authenticateSchema>;
 
-export const filialStatuSchema = z.object({
-  status: z.enum(["aberta", "fechado"]),
-});
-export type filialStatusData = z.infer<typeof filialStatuSchema>;
 export async function Manager(fastify: FastifyInstance) {
   const managerUseCase = new ManagerUseCase();
   fastify.addHook("preHandler", AuthManager);
@@ -35,25 +31,6 @@ export async function Manager(fastify: FastifyInstance) {
     } catch (error) {
       console.error(error);
       reply.code(500).send({ message: "Erro ao buscar perfil" });
-    }
-  });
-  fastify.post("/update-status", async (req, reply) => {
-    const user = req.user;
-    if (!user) return reply.code(401).send({ message: "Token invalid" });
-    const { status } = filialStatuSchema.parse(req.body);
-    try {
-      const up = await managerUseCase.updateFilialStatus({
-        filial: { status },
-        id: user.id,
-        filialId: user.filialId,
-      });
-      if (!up) {
-        throw new Error("Erro ao atualizar status da filial");
-      }
-      return reply.code(200).send();
-    } catch (error) {
-      console.error(error);
-      reply.code(500).send({ message: "Erro ao atualizar status da filial" });
     }
   });
   fastify.register(Client, {
