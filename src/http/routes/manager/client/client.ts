@@ -24,7 +24,7 @@ export async function Client(fastify: FastifyInstance) {
       .object({
         key: z.string(),
       })
-      .parse(req.body);
+      .parse(req.query);
     const { id } = z
       .object({
         id: z.string(),

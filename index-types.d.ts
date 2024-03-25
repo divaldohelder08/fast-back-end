@@ -3,7 +3,6 @@ import type { UpdateKeyProps } from "./src/http/routes/manager/settings/settings
 import type { z } from "zod";
 
 
-
 export interface geoMapFilter extends decodedUserFilialIdProps{
   numberBI:string
 }
@@ -59,10 +58,8 @@ export interface deleteClientProps extends decodedUserProps {
   clintId: string;
   key: string;
 }
-export interface deleteAgentProps extends decodedUserProps {
-  agentId: string;
-  key: string;
-}
+
+
 
 export interface deleteDriverProps extends decodedUserProps {
   driverId: string;

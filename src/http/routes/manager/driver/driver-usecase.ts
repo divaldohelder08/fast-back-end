@@ -230,35 +230,22 @@ export class DriverUseCase {
         id,
         filialId,
       },
-      select: {
-        id: true,
-        numberBI: true,
-        name: true,
-        email: true,
-        createdAt: true,
-        status: true,
-        veiculo: {
-          select: {
-            matricula: true,
-          },
-        },
-      },
     });
-    return
+    return;
   }
   async geoMap({ filialId, numberBI }: geoMapFilter) {
     return await db.driver.findMany({
       select: {
         id: true,
-        numberBI:true,
+        numberBI: true,
         name: true,
         coordenadas: true,
       },
       where: {
         filialId,
         numberBI: {
-          contains: numberBI
-        }
+          contains: numberBI,
+        },
       },
     });
   }

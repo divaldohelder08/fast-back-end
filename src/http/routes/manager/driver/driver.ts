@@ -2,6 +2,12 @@ import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { DriverUseCase } from "./driver-usecase";
 
+
+export const updateStatuSchema = z.object({
+  status: z.enum(["On", "Off"]),
+});
+export type updateStatusData = z.infer<typeof updateStatuSchema>;
+
 const createDriverSchema = z.object({
   numberBI: z
     .string()
@@ -26,10 +32,8 @@ const createDriverSchema = z.object({
 });
 
 export type createDriverProps = z.infer<typeof createDriverSchema>;
-const updateStatuSchema = z.object({
-  status: z.enum(["On", "Off"]),
-});
-export type updateStatusData = z.infer<typeof updateStatuSchema>;
+
+
 export async function Driver(fastify: FastifyInstance) {
   const driverUseCase = new DriverUseCase();
   fastify.get("/", async (req, reply) => {

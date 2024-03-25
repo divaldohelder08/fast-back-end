@@ -132,7 +132,7 @@ model Agents {
   email     String       @unique
   sexo      Sexo
   status    GlobalStatus @default(Off)
-  tel       String?      @unique @map("telefone") @db.VarChar(9)
+  tel       String      @unique @map("telefone") @db.VarChar(9)
   password  String       @default("0000") @map("senha")
   createdAt DateTime     @default(now()) @map("created_at")
   updatedAt DateTime     @updatedAt @map("updated_at")

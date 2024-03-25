@@ -1,7 +1,7 @@
 import type {
   clientByIdProps,
   decodedUserFilialIdProps,
-  deleteAgentProps,
+  updateStatusData
 } from "../../../../../index-types";
 import { db } from "../../../../db/connection";
 import type { agentProps } from "./agent";
@@ -9,7 +9,13 @@ import type { agentProps } from "./agent";
 interface agentData extends agentProps {
   filialId: string;
 }
-
+interface updateStatusProps extends updateStatusData {
+  filialId: string;
+  id: string;
+}
+export interface deleteAgentProps extends decodedUserFilialIdProps {
+  agentId: string;
+}
 export class AgentUseCase {
   async find({ filialId }: decodedUserFilialIdProps) {
     return await db.agents.findMany({
@@ -23,20 +29,21 @@ export class AgentUseCase {
         createdAt: true,
         avatar: true,
         tel: true,
+        status: true,
       },
     });
   }
-  async delete({ id, key, agentId, filialId }: deleteAgentProps) {
-    if (
-      !(await db.manager.findUnique({
-        where: {
-          id,
-          password: key,
-        },
-      }))
-    ) {
-      throw Error("Senha incorreta");
-    }
+  async delete({ agentId, filialId }: deleteAgentProps) {
+    // if (
+    //   !(await db.manager.findUnique({
+    //     where: {
+    //       id,
+    //       password: key,
+    //     },
+    //   }))
+    // ) {
+    //   throw Error("Senha incorreta");
+    // }
 
     if (
       !(await db.agents.findUnique({
@@ -68,7 +75,7 @@ export class AgentUseCase {
     }
     return agent;
   }
-  async create({ email, name, sexo, filialId }: agentData) {
+  async create({ email, name, sexo, filialId, tel }: agentData) {
     if (
       await db.agents.findUnique({
         where: {
@@ -92,7 +99,30 @@ export class AgentUseCase {
         email,
         sexo,
         filialId,
+        tel
       },
     });
+  }
+  async updateStatus({ id, status, filialId }: updateStatusProps) {
+    if (
+      !(await db.agents.findFirst({
+        where: {
+          id,
+          filialId,
+        },
+      }))
+    )
+      throw new Error("Agente não encontrado!");
+
+    await db.agents.update({
+      data: {
+        status,
+      },
+      where: {
+        id,
+        filialId,
+      }
+    });
+    return
   }
 }
