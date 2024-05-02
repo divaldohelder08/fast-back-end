@@ -3,9 +3,11 @@ import { db } from "../../db/connection";
 import { decrypt } from "../../lib/jose";
 import type { jwtPayloadSchema } from "../../types";
 import { NotClientError, UnauthorizedError } from "../routes/Errors";
+import { paymentExpired } from "./remove-clients";
 export async function ClientMiddleware(req: FastifyRequest, rep: FastifyReply) {
   const token = req.headers.authorization?.replace(/^Bearer /, "");
   if (!token) return rep.code(401).send({ message: "Token missing" });
+  await paymentExpired();
   try {
     const decodedToken = (await decrypt(token)) as jwtPayloadSchema;
     if (!decodedToken) throw new UnauthorizedError();

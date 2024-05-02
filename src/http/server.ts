@@ -22,6 +22,13 @@ import { RecolhaUseCase } from "./routes/manager/recolha/recolha-usecase";
 import Driver, { DriverAuthSchema } from "./routes/driver/driver";
 import Client, { ClientAuthSchema } from "./routes/client/client";
 import { ClientUseCase } from "./routes/client/client-usecase";
+import cron from "node-cron";
+import { paymentExpired } from "./middleware/remove-clients";
+
+cron.schedule("0 0 * * *", async () => {
+  await paymentExpired();
+  console.log("payments revisados.");
+});
 
 const app = fastify();
 app.register(import("@fastify/websocket"));
@@ -43,12 +50,9 @@ app.register(cors, {
   methods: ["GET", "PUT", "PATCH", "POST", "DELETE"],
 });
 
-
- async function ValidatePayments(){
-   await db.payment.findMany()
- }
-
-
+async function ValidatePayments() {
+  await db.payment.findMany();
+}
 
 app.get("/recolhas/:id", async (req, reply) => {
   const { id } = z
