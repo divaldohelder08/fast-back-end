@@ -223,13 +223,13 @@ app.get("/price", async (req, reply) => {
   }
 });
 
-//  setInterval(
-//    async () => {
-//      await seedRecolhas();
-//    },
-//    Math.floor(Math.random() * 99999)
-// Math.floor(Math.random() * 99)
-//  );
+  setInterval(
+    async () => {
+      await seedRecolhas();
+    },
+   Math.floor(Math.random() * 99999)
+//    Math.floor(Math.random() * 2)
+  );
 
 app
   .listen({

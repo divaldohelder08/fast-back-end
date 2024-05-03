@@ -11,7 +11,7 @@ export class RecolhaUseCase {
       where: {
         driverId: id,
         status: {
-          notIn: ["cancelada", "finalizada"],
+          notIn: ["cancelada","andamento", "finalizada"],
         },
         client: {
           status: {
@@ -113,6 +113,7 @@ export class RecolhaUseCase {
         travelMode: "car",
       },
     });
+    console.log(response,"directions")
     return response;
   }
   async updateRecolha(id: string, response: any) {

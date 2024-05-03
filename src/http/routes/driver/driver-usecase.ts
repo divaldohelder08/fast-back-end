@@ -37,6 +37,7 @@ export class DriverUseCase {
         },
       },
     });
+
     
     if (!user || !user.filial) {
       throw new Error("Credenciais inválidas");
