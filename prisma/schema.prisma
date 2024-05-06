@@ -70,7 +70,7 @@ model Driver {
   id          String       @id @default(uuid())
   filialId    String       @map("filial_id")
   veiculoId   String?      @unique @map("veiculo_id")
-  numberBI    String       @unique @map("numberBI") @db.VarChar(13)
+  numberBI    String       @unique @map("numberBI") @db.VarChar(14)
   name        String       @db.VarChar(150)
   email       String       @unique
   sexo        Sexo
@@ -110,7 +110,7 @@ model Client {
   email       String        @unique
   paymentId   String
   password    String        @default("0000") @map("senha")
-  numberBI    String        @unique @map("number_bi") @db.VarChar(13)
+  numberBI    String        @unique @map("number_bi") @db.VarChar(14)
   tel         String        @unique @db.VarChar(9)
   sexo        Sexo
   avatar      String?

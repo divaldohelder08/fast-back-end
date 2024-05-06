@@ -10,9 +10,9 @@ export type updateStatusData = z.infer<typeof updateStatuSchema>;
 const createDriverSchema = z.object({
   numberBI: z
     .string()
-    .min(13, "Min 13")
-    .max(13, "Max 13")
-    .regex(/[^a-zA-Z]{9}[^a-z0-9]{2}[^a-zA-Z]{2}/, "Número de bi invalidoo"),
+    .min(14, "Min 14")
+    .max(14, "Max 14")
+    .regex(/[^a-zA-Z]{9}[^a-z0-9]{2}[^a-zA-Z]{3}/, "Número de bi invalidoo"),
   name: z.string().min(10, "Min 13").max(255, "Max 255"),
   avatar: z.string().nullable(),
   tel: z

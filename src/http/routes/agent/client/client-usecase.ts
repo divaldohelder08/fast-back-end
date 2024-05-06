@@ -46,6 +46,7 @@ export class ClientUseCase {
         tel: true,
         address: true,
         coordenadas: true,
+        numberBI:true,
         payment: {
           select: {
             endAt: true,

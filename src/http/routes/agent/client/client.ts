@@ -12,10 +12,10 @@ const formDataSchema = z.object({
     .max(250, "Max 250"),
   numberBI: z
     .string()
-    .min(13, "Min 13")
-    .max(13, "Max 13")
+    .min(14, "Min 14")
+    .max(14, "Max 14")
     .regex(
-      new RegExp(/[^a-zA-Z]{9}[^a-z0-9]{2}[^a-zA-Z]{2}/),
+      new RegExp(/[^a-zA-Z]{9}[^a-z0-9]{2}[^a-zA-Z]{3}/),
       "Formato invalido"
     ),
   sexo: z.enum(["F", "M"], {
