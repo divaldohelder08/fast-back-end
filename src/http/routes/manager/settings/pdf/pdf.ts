@@ -23,7 +23,9 @@ export async function pdf(fastify: FastifyInstance) {
       range,
     } = recolhaProps.parse(req.body);
     try{
-      rep.send(await pdfUseCase.recolha({ client, status, range, driver }))
+        const ola=await pdfUseCase.recolha({ client, status, range, driver })
+        console.log(ola)
+      rep.send(ola)
     }catch(error){
       rep.send(error)
     }
