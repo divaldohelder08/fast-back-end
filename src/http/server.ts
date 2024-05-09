@@ -227,8 +227,8 @@ app.get("/price", async (req, reply) => {
     async () => {
       await seedRecolhas();
     },
-   Math.floor(Math.random() * 99999)
-//    Math.floor(Math.random() * 2)
+  Math.floor(Math.random() * 99999)
+//   Math.floor(Math.random() * 2)
   );
 
 app

@@ -56,7 +56,8 @@ export class RecolhaUseCase {
       const response = await this.getDirections(lat, lgn, ifExist);
       return await this.updateRecolha(id, response);
     } catch (error) {
-      throw new Error(`Erro ao manipular andamento: ${error}`);
+    console.log(error)
+      throw new Error("Erro ao manipular andamento");
     }
   }
 
