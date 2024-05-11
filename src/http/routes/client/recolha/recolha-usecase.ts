@@ -4,7 +4,7 @@ import { prisma } from "../../../../utils/prisma-throws";
 export class RecolhaUseCase {
   async delivered(clientId: string) {
     await prisma.client.find(clientId);
-    return await db.recolha.findMany({
+    const recos = await db.recolha.findMany({
       where: {
         clientId,
         status: "finalizada",
@@ -32,6 +32,8 @@ export class RecolhaUseCase {
         comment: true,
       },
     });
+    console.log(recos)
+    return recos
   }
   async inAndamento(clientId: string) {
     await prisma.client.find(clientId);
@@ -64,48 +66,46 @@ export class RecolhaUseCase {
       },
     });
   }
-  async create({ clientId, filialId }:{clientId:string, filialId:string}){
+  async create({ clientId, filialId }: { clientId: string, filialId: string }) {
     await prisma.client.find(clientId)
 
-    const filial=await db.filial.findUnique(
-    {
-      where:{
-        id:filialId,
-        status:"aberta"
+    const filial = await db.filial.findUnique(
+      {
+        where: {
+          id: filialId,
+          status: "aberta"
+        }
       }
-    }
     )
-    if(!filial) throw new Error("A filial não se encontra aberta")
+    if (!filial) throw new Error("A filial não se encontra aberta")
 
 
-    const driver=await db.driver.findFirst({
-      where:{
+    const driver = await db.driver.findFirst({
+      where: {
         filialId,
-        status:"On",
+        status: "On",
       }
     })
 
-    if(!driver) throw new Error("Nenhum motorista se encontra a trabalhar")
+    if (!driver) throw new Error("Nenhum motorista se encontra a trabalhar")
 
-   return await db.recolha.create({
+    return await db.recolha.create({
       data: {
         clientId,
-        driverId:driver?.id,
+        driverId: driver?.id,
         filialId,
         status: "pendente",
       },
-      select:{
-        id:true,
-        driver:{
-          select:{
-            name:true,
-            tel:true,
-            avatar:true
+      select: {
+        id: true,
+        driver: {
+          select: {
+            name: true,
+            tel: true,
+            avatar: true
           }
         }
       }
     });
-
   }
-
 }

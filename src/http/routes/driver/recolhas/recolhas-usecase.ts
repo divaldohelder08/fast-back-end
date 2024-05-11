@@ -57,6 +57,7 @@ export class RecolhaUseCase {
       return await this.updateRecolha(id, response);
     } catch (error) {
     console.log(error)
+        console.log(error)
       throw new Error("Erro ao manipular andamento");
     }
   }
@@ -108,13 +109,13 @@ export class RecolhaUseCase {
     const response = await axios.get(API_URL, {
       params: {
         "api-version": "1.0",
-        "subscription-key": process.env.AZURE_SECRET_KEY,
+        "subscription-key": 'dBAVV2zTFrr1RDnNU_Fice1h2gYz5CoV-Q2SZ6Y_Lws',
         query: `${lat},${lgn}:${ifExist.client.coordenadas[1]},${ifExist.client.coordenadas[0]}`,
         routeRepresentation: "polyline",
         travelMode: "car",
       },
     });
-    console.log(response,"directions")
+    console.log(response.data.routes[0],"directions ijauhfdsnjsldokfij")
     return response;
   }
   async updateRecolha(id: string, response: any) {
