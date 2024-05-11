@@ -21,7 +21,7 @@ export async function Recolha(fastify: FastifyInstance) {
     const client = req.client;
     if (!client) return reply.code(401).send({ message: "Token invalido" });
     try {
-      return reply.send(await recolhaUseCase.inAndamento(client.id));
+      return reply.send(await recolhaUseCase.delivered(client.id));
     } catch (error) {
       console.error(error);
       reply.code(500).send(error);

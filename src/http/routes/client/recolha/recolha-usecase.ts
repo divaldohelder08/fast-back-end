@@ -4,7 +4,7 @@ import { prisma } from "../../../../utils/prisma-throws";
 export class RecolhaUseCase {
   async delivered(clientId: string) {
     await prisma.client.find(clientId);
-    const recos = await db.recolha.findMany({
+    return await db.recolha.findMany({
       where: {
         clientId,
         status: "finalizada",
@@ -32,8 +32,7 @@ export class RecolhaUseCase {
         comment: true,
       },
     });
-    console.log(recos)
-    return recos
+
   }
   async inAndamento(clientId: string) {
     await prisma.client.find(clientId);
