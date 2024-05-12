@@ -9,7 +9,7 @@
     "jsx": "react-jsx",
     "allowJs": true,
     "types": [
-      "./src/types/index-types"
+      "./src/types/index.d.ts"
     ],
     /* Bundler mode */
     "moduleResolution": "bundler",

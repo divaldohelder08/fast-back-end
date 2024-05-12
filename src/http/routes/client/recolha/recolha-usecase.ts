@@ -2,6 +2,39 @@ import { db } from "../../../../db/connection";
 import { prisma } from "../../../../utils/prisma-throws";
 
 export class RecolhaUseCase {
+  async findById(id: string) {
+    const recolha = await db.recolha.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        distance: true,
+        duration: true,
+        status: true,
+        createdAt: true,
+        comment: true,
+        directions: true,
+        driver: {
+          select: {
+            id: true,
+            name: true,
+            avatar: true,
+            email: true,
+            tel: true,
+            veiculo: {
+              select: {
+                matricula: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    if (!recolha)
+      throw new Error("Recolha não encontrada")
+    return recolha
+  }
   async delivered(clientId: string) {
     await prisma.client.find(clientId);
     return await db.recolha.findMany({
@@ -78,7 +111,6 @@ export class RecolhaUseCase {
     )
     if (!filial) throw new Error("A filial não se encontra aberta")
 
-
     const driver = await db.driver.findFirst({
       where: {
         filialId,
@@ -107,4 +139,19 @@ export class RecolhaUseCase {
       }
     });
   }
+  async handleCancel(id: string) {
+    const ifExist = await db.recolha.findFirst({
+      where: { id },
+    });
+    if (!ifExist) throw new Error("Recolha não encontrada");
+    await db.recolha.update({
+      where: {
+        id,
+      },
+      data: {
+        status: "cancelada",
+      },
+    });
+  }
+
 }

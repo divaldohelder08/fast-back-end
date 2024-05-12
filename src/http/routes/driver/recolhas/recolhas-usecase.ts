@@ -11,7 +11,7 @@ export class RecolhaUseCase {
       where: {
         driverId: id,
         status: {
-          notIn: ["cancelada","andamento", "finalizada"],
+          notIn: ["cancelada", "andamento", "finalizada"],
         },
         client: {
           status: {
@@ -56,15 +56,15 @@ export class RecolhaUseCase {
       const response = await this.getDirections(lat, lgn, ifExist);
       return await this.updateRecolha(id, response);
     } catch (error) {
-    console.log(error)
-        console.log(error)
+      console.log(error)
+      console.log(error)
       throw new Error("Erro ao manipular andamento");
     }
   }
 
   async handleCancel(id: string) {
     const ifExist = await db.recolha.findFirst({
-      where: { id, status: { in: ["andamento", "pendente"] } },
+      where: { id, status:  "pendente" },
     });
     if (!ifExist) throw new Error("Recolha não encontrada");
     await db.recolha.update({
@@ -91,6 +91,7 @@ export class RecolhaUseCase {
       },
     });
   }
+
   async findRecolha(id: string) {
     const ifExist = await db.recolha.findFirst({
       where: { id, status: "pendente" },
@@ -115,7 +116,7 @@ export class RecolhaUseCase {
         travelMode: "car",
       },
     });
-    console.log(response.data.routes[0],"directions ijauhfdsnjsldokfij")
+    console.log(response.data.routes[0], "directions ijauhfdsnjsldokfij")
     return response;
   }
   async updateRecolha(id: string, response: any) {
@@ -133,6 +134,7 @@ export class RecolhaUseCase {
       select: {
         id: true,
         status: true,
+        directions: true,
         client: {
           select: {
             id: true,

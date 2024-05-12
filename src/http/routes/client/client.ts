@@ -3,6 +3,7 @@ import { z } from "zod";
 import { ClientMiddleware } from "../../middleware/client";
 import { ClientUseCase } from "./client-usecase";
 import { Recolha } from "./recolha/recolha";
+import { Settings } from "./settings/settings";
 
 export const ClientAuthSchema = z.object({
   email: z.string().email({ message: "Formato de email inválido" }),
@@ -38,7 +39,7 @@ export default async function Client(fastify: FastifyInstance) {
   fastify.register(Recolha, {
     prefix: "/recolhas",
   });
-  // fastify.register(Settings, {
-  //   prefix: "/settings",
-  // });
+  fastify.register(Settings, {
+    prefix: "/settings",
+  });
 }

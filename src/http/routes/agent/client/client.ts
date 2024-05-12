@@ -31,7 +31,7 @@ const formDataSchema = z.object({
   nascimento: z.coerce
     .date()
     .max(dayjs().subtract(20, "years").toDate(), "Muito Jovem, min 20 anos"),
-  address: z.string().min(10, "Min 10"),
+  address: z.string().min(4, "Min 4"),
   coordenadas: z.number().array().min(2, "Min 2").max(2, "Max 2"),
 });
 export type formData = z.infer<typeof formDataSchema>;
