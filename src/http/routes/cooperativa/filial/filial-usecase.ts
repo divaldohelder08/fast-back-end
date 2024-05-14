@@ -24,16 +24,16 @@ export class FilialUseCase {
       where:
         (filialStatus != "" ? filialStatus : null) === null
           ? {
-              name: {
-                contains: filialName,
-              },
-            }
-          : {
-              name: {
-                contains: filialName,
-              },
-              status: filialStatus as FilialStatus,
+            name: {
+              contains: filialName,
             },
+          }
+          : {
+            name: {
+              contains: filialName,
+            },
+            status: filialStatus as FilialStatus,
+          },
       select: {
         id: true,
         name: true,
@@ -260,6 +260,27 @@ export class FilialUseCase {
       },
       data: {
         status,
+      },
+    });
+  }
+  async geoMap(name: string) {
+    return await db.filial.findMany({
+      select: {
+        id: true,
+        name: true,
+        address:true,
+        manager: {
+          select: {
+            avatar: true,
+            name: true
+          }
+        },
+        coordenadas: true,
+      },
+      where: {
+        name: {
+          contains: name
+        }
       },
     });
   }

@@ -32,6 +32,12 @@ export interface GroupedData {
     data: string;
   };
 }
+export interface GroupedDataHeatMap {
+  [key: string]: {
+    count: number;
+    data: string;
+  };
+}
 
 export type jwtPayloadSchema = {
   id: string;

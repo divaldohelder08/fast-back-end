@@ -34,54 +34,74 @@ export class ClientUseCase {
       },
     });
   }
-  async findById({ id }: decodedUserIdProps) {
-    await prisma.client.find(id);
-    const heatData = await db.recolha.groupBy({
-      by: ["createdAt"],
-      where: {
-        clientId: id,
-        status: {
-          in: ["finalizada", "cancelada"],
-        },
-      },
-      _count: true,
-      orderBy: {
-        createdAt: "asc",
-      },
-    });
+async findById({ id, filialId }: clientByIdProps) {
+  await prisma.client.findOnFilial({
+    id,
+    filialId,
+  });
 
-    return {
-      client: await db.client.findUnique({
-        where: {
-          id,
-        },
-        select: {
-          avatar: true,
-          name: true,
-          email: true,
-          createdAt: true,
-          tel: true,
-          status: true,
-          filial: {
-            select: {
-              name: true,
-            },
+  const heatData = await db.recolha.groupBy({
+    by: ["createdAt"],
+    where: {
+      clientId: id,
+      status: {
+        in: ["finalizada", "cancelada"],
+      },
+    },
+    _count: true,
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
+
+  const groupedByDay: { [key: string]: { count: number; data: string } } = {};
+  
+  heatData.forEach((e) => {
+    const date = new Date(e.createdAt);
+    date.setHours(0, 0, 0, 0);
+    const dateKey = date.toISOString();
+    if (!groupedByDay[dateKey]) {
+      groupedByDay[dateKey] = { count: 0, data: dateKey };
+    }
+    groupedByDay[dateKey].count += e._count;
+  });
+
+
+const res=Object.values(groupedByDay).map((e) => ({
+      count: e.count,
+      date: dayjs(e.data).format("YYYY/MM/DD"),
+    }))
+
+  return {
+    client: await db.client.findUnique({
+      where: {
+        id,
+        filialId,
+      },
+      select: {
+        avatar: true,
+        name: true,
+        email: true,
+        createdAt: true,
+        status: true,
+        tel: true,
+        filial: {
+          select: {
+            name: true,
           },
-          _count: {
-            select: {
-              recolhas: true,
-            },
+        },
+        _count: {
+          select: {
+            recolhas: true,
           },
         },
-      }),
-      heatMap: heatData.map((e) => {
-        return {
-          date: dayjs(e.createdAt).format("YYYY/MM/DD"),
-          count: e._count,
-        };
-      }),
-    };
-  }
+      },
+    }),
+    heatMap: res,
+  };
+}
+
+  
   async geoMap({ numberBI }: geoMapFilter1) {
     return await db.client.findMany({
       select: {

@@ -1,0 +1,8 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Fastify API",
+    "description": "Fastify API with Swagger",
+    "version": "1.0.0"
+  }
+}

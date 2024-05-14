@@ -1,5 +1,0 @@
--- AlterTable
-ALTER TABLE "Client" ALTER COLUMN "number_bi" SET DATA TYPE VARCHAR(14);
-
--- AlterTable
-ALTER TABLE "driver" ALTER COLUMN "numberBI" SET DATA TYPE VARCHAR(14);

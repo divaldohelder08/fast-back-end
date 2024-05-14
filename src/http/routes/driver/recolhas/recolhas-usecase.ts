@@ -56,8 +56,7 @@ export class RecolhaUseCase {
       const response = await this.getDirections(lat, lgn, ifExist);
       return await this.updateRecolha(id, response);
     } catch (error) {
-      console.log(error)
-      console.log(error)
+      console.log(error,"eresdkijfvsnd")
       throw new Error("Erro ao manipular andamento");
     }
   }
@@ -116,7 +115,7 @@ export class RecolhaUseCase {
         travelMode: "car",
       },
     });
-    console.log(response.data.routes[0], "directions ijauhfdsnjsldokfij")
+
     return response;
   }
   async updateRecolha(id: string, response: any) {

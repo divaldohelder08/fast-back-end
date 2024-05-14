@@ -94,14 +94,11 @@ export class PdfUseCase {
     const filial = filialId === "all" ? undefined : filialId;
     const filters =
       status === "all"
-        ? {
-            filialId: filial,
-          }
+        ? { filialId: filial }
         : {
             status,
             filialId: filial,
           };
-
     const clients = await db.client.findMany({
       select: {
         id: true,

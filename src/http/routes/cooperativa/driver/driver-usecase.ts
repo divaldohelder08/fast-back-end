@@ -68,6 +68,7 @@ export class DriverUseCase {
       },
       _count: true,
     });
+    
     const heatData = await db.recolha.groupBy({
       by: ["createdAt"],
       where: {
@@ -81,14 +82,29 @@ export class DriverUseCase {
         createdAt: "asc",
       },
     });
+
+
+  const groupedByDay: { [key: string]: { count: number; data: string } } = {};
+  
+  heatData.forEach((e) => {
+    const date = new Date(e.createdAt);
+    date.setHours(0, 0, 0, 0);
+    const dateKey = date.toISOString();
+    if (!groupedByDay[dateKey]) {
+      groupedByDay[dateKey] = { count: 0, data: dateKey };
+    }
+    groupedByDay[dateKey].count += e._count;
+  });
+
+
+const res=Object.values(groupedByDay).map((e) => ({
+      count: e.count,
+      date: dayjs(e.data).format("YYYY/MM/DD"),
+    }))
+    
     return {
       driver,
-      heatMap: heatData.map((e) => {
-        return {
-          date: dayjs(e.createdAt).format("YYYY/MM/DD"),
-          count: e._count,
-        };
-      }),
+      heatMap:res,
       row: {
         finalizada: rowValue[0] ? rowValue[0]._count : 0,
         cancelada: rowValue[1] ? rowValue[1]._count : 0,

@@ -29,7 +29,7 @@ export const formManagerSchema = z.object({
 });
 
 export const formFilialSchema = z.object({
-  name: z.string().trim().max(100, "Max 100").min(10, "Min 10"),
+  name: z.string().trim().max(100, "Max 100").min(5, "Min 5"),
   email: z
     .string()
     .email("Formato invalido")
@@ -69,7 +69,7 @@ export const formFilialContactoSchema = z.object({
 
 
 export const filialStatuSchema = z.object({
-  id:z.string(),
+  id: z.string(),
   status: z.enum(["aberta", "fechado"]),
 });
 
@@ -182,14 +182,31 @@ export async function Filias(fastify: FastifyInstance) {
       reply.send(error);
     }
   });
-    fastify.patch("/update-status", async (req, reply) => {
+  fastify.patch("/update-status", async (req, reply) => {
     const { status, id } = filialStatuSchema.parse(req.body);
     try {
-     await filialUseCase.updateFilialStatus({
+      await filialUseCase.updateFilialStatus({
         status,
         id
       });
       return reply.code(200).send();
+    } catch (error) {
+      console.error(error);
+      reply.send(error);
+    }
+  });
+  fastify.get("/geo-map", async (req, reply) => {
+    const user = req.super;
+    if (!user) return reply.code(401).send({ message: "Token invalido" });
+    const { name } = z
+      .object({
+        name: z.string(),
+      })
+      .parse(req.query);
+    try {
+      return reply.send(
+        await filialUseCase.geoMap(name)
+      );
     } catch (error) {
       console.error(error);
       reply.send(error);

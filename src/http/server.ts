@@ -24,6 +24,8 @@ import Client, { ClientAuthSchema } from "./routes/client/client";
 import { ClientUseCase } from "./routes/client/client-usecase";
 import cron from "node-cron";
 import { paymentExpired } from "./middleware/remove-clients";
+import SwaggerJson from "./swagger.json"
+import { Sms } from "./routes/cooperativa/settings/sms/sms";
 
 cron.schedule("0 0 * * *", async () => {
   await paymentExpired();
@@ -31,6 +33,11 @@ cron.schedule("0 0 * * *", async () => {
 });
 
 const app = fastify();
+app.register(import("@fastify/swagger"))
+app.register(import("@fastify/swagger-ui"), {
+  routePrefix: '/docs',
+
+})
 app.register(import("@fastify/websocket"));
 app.register(import("@fastify/rate-limit"), {
   max: 1000,
@@ -74,12 +81,18 @@ app.get("/recolhas/:id", async (req, reply) => {
 });
 
 app.register(Finds, {
+  schema: {
+    tags: ["Finds"],
+  },
   prefix: "/find",
 });
 
 // Manager routes
 
 app.register(Manager, {
+  schema: {
+    tags: ["Manager"],
+  },
   prefix: "/manager",
 });
 
@@ -115,6 +128,9 @@ app.post("/manager/authenticate", async (req, reply) => {
 // Agent routes
 
 app.register(Agent, {
+  schema: {
+    tags: ["Agent"],
+  },
   prefix: "/agent",
 });
 
@@ -223,13 +239,18 @@ app.get("/price", async (req, reply) => {
   }
 });
 
-  setInterval(
-    async () => {
-      await seedRecolhas();
-    },
-  Math.floor(Math.random() * 99999)
-//   Math.floor(Math.random() * 2)
-  );
+// setInterval(
+//   async () => {
+//     await seedRecolhas();
+//   },
+//   Math.floor(Math.random() * 99999)
+//   //  Math.floor(Math.random() * 80000)
+// );
+
+
+app.register(Sms, {
+  prefix: "/sms",
+});
 
 app
   .listen({

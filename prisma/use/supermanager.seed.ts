@@ -44,6 +44,6 @@ export async function seedSuperManagers() {
       managerId: pManager.id,
     },
   });
-  console.log(chalk.yellow("✔ super-managers seeded"));
+  console.log(chalk.yellow("super-managers seeded"));
   return;
 }

@@ -43,7 +43,6 @@ export async function Recolha(fastify: FastifyInstance) {
       reply.code(500).send(error);
     }
   })
-  
   fastify.get("/finalizadas", async (req, reply) => {
     const client = req.client;
     if (!client) return reply.code(401).send({ message: "Token invalido" });

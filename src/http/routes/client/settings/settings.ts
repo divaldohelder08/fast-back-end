@@ -17,7 +17,7 @@ const updateProfileSchema = z.object({
     .max(9, "Max 9")
     .regex(/9[1-5][0-9]{7}/, "Número invalido"),
 });
-
+type updareProps = z.infer<typeof updateProfileSchema>
 
 export async function Settings(fastify: FastifyInstance) {
   const settingsUseCase = new SettingsUseCase();

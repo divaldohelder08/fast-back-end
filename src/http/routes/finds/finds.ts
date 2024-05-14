@@ -1,10 +1,14 @@
 import type { FastifyInstance } from "fastify"
 import { FindUseCase } from "./find-useCase"
-import {z} from "zod"
+import { z } from "zod"
 
 export async function Finds(fastify: FastifyInstance) {
     const findUseCase = new FindUseCase()
-    fastify.get("/filias", async (req, reply) => {
+    fastify.get("/filias", {
+        schema: {
+            tags: ["Finds"],
+        }
+    }, async (req, reply) => {
         try {
             return reply.send(await findUseCase.filias())
         } catch (error) {
@@ -21,13 +25,13 @@ export async function Finds(fastify: FastifyInstance) {
 
 
 
-    
-    fastify.get("/filial/:id", async (req, reply) => {
-         const { id }=z.object({
-            id:z.string()
-         }).parse(req.params)
 
-         
+    fastify.get("/filial/:id", async (req, reply) => {
+        const { id } = z.object({
+            id: z.string()
+        }).parse(req.params)
+
+
         try {
             return reply.send(await findUseCase.findName({ id }))
         } catch (error) {
