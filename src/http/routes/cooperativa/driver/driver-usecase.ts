@@ -45,6 +45,7 @@ export class DriverUseCase {
         email: true,
         createdAt: true,
         tel: true,
+        coordenadas: true,
         veiculo: {
           select: {
             matricula: true,
@@ -96,15 +97,13 @@ export class DriverUseCase {
     groupedByDay[dateKey].count += e._count;
   });
 
-
-const res=Object.values(groupedByDay).map((e) => ({
-      count: e.count,
-      date: dayjs(e.data).format("YYYY/MM/DD"),
-    }))
     
     return {
       driver,
-      heatMap:res,
+      heatMap:Object.values(groupedByDay).map((e) => ({
+      count: e.count,
+      date: dayjs(e.data).format("YYYY/MM/DD"),
+    })),
       row: {
         finalizada: rowValue[0] ? rowValue[0]._count : 0,
         cancelada: rowValue[1] ? rowValue[1]._count : 0,

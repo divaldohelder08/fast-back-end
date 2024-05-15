@@ -133,6 +133,33 @@ export async function Driver(fastify: FastifyInstance) {
       reply.send(error);
     }
   });
+  fastify.post("/:id/update-filial", async (req, reply) => {
+    const manager = req.manager;
+    if (!manager) return reply.code(401).send({ message: "Token invalido" });
+    const { id } = z
+      .object({
+        id: z.string(),
+      })
+      .parse(req.params);
+
+    const { key, filialId } = z.object({
+      key: z.string({ required_error: "A senha do manager é obrigatoria" }),
+      filialId: z.string({ required_error: "O id da filial é obrigatoria" })
+    }).parse(req.body)
+
+    try {
+      await driverUseCase.updateFilial({
+        filialId,
+        key,
+        managerId: manager.id,
+        id,
+      });
+      return reply.code(200).send({ message: "Filial actualizada com sucesso" });
+    } catch (error) {
+      console.error(error);
+      reply.send(error);
+    }
+  });
   fastify.patch("/:id/update-status", async (req, reply) => {
     const manager = req.manager;
     if (!manager) return reply.code(401).send({ message: "Token invalido" });

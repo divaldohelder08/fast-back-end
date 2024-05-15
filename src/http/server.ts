@@ -81,18 +81,12 @@ app.get("/recolhas/:id", async (req, reply) => {
 });
 
 app.register(Finds, {
-  schema: {
-    tags: ["Finds"],
-  },
   prefix: "/find",
 });
 
 // Manager routes
 
 app.register(Manager, {
-  schema: {
-    tags: ["Manager"],
-  },
   prefix: "/manager",
 });
 
@@ -238,19 +232,14 @@ app.get("/price", async (req, reply) => {
     reply.send(error);
   }
 });
-
-// setInterval(
-//   async () => {
-//     await seedRecolhas();
-//   },
-//   Math.floor(Math.random() * 99999)
-//   //  Math.floor(Math.random() * 80000)
-// );
-
-
-app.register(Sms, {
-  prefix: "/sms",
-});
+/*
+ setInterval(
+    async () => {
+      await seedRecolhas();
+    },
+Math.floor(Math.random() * 99999)
+//   Math.floor(Math.random() * 80)
+  );*/
 
 app
   .listen({

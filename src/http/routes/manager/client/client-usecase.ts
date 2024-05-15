@@ -69,7 +69,7 @@ async findById({ id, filialId }: clientByIdProps) {
   heatData.forEach((e) => {
     const date = new Date(e.createdAt);
     date.setHours(0, 0, 0, 0);
-    const dateKey = date.toISOString().split('T')[0];
+    const dateKey = date.toISOString();
     if (!groupedByDay[dateKey]) {
       groupedByDay[dateKey] = { count: 0, data: dateKey };
     }
@@ -77,11 +77,6 @@ async findById({ id, filialId }: clientByIdProps) {
   });
 
 
-const res=Object.values(groupedByDay).map((e) => ({
-      count: e.count,
-      data: dayjs(e.data).format("YYYY/MM/DD"),
-    }))
-    console.log(res,"werwerhgvhasf")
   return {
     client: await db.client.findUnique({
       where: {
@@ -95,6 +90,8 @@ const res=Object.values(groupedByDay).map((e) => ({
         createdAt: true,
         status: true,
         tel: true,
+        coordenadas:true,
+        address:true,
         filial: {
           select: {
             name: true,
@@ -107,7 +104,10 @@ const res=Object.values(groupedByDay).map((e) => ({
         },
       },
     }),
-    heatMap: res,
+    heatMap: Object.values(groupedByDay).map((e) => ({
+      count: e.count,
+      date: dayjs(e.data).format("YYYY/MM/DD"),
+    })),
   };
 }
 

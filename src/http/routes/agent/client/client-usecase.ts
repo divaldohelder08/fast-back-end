@@ -31,6 +31,18 @@ export class ClientUseCase {
       },
     });
 
+      const groupedByDay: { [key: string]: { count: number; data: string } } = {};
+  
+  heatData.forEach((e) => {
+    const date = new Date(e.createdAt);
+    date.setHours(0, 0, 0, 0);
+    const dateKey = date.toISOString();
+    if (!groupedByDay[dateKey]) {
+      groupedByDay[dateKey] = { count: 0, data: dateKey };
+    }
+    groupedByDay[dateKey].count += e._count;
+  });
+
     const client = await db.client.findFirst({
       where: {
         id: {
@@ -79,12 +91,10 @@ export class ClientUseCase {
         recolhas,
         endAt,
       },
-      heatMap: heatData.map((e) => {
-        return {
-          date: dayjs(e.createdAt).format("YYYY/MM/DD"),
-          count: e._count,
-        };
-      }),
+    heatMap: Object.values(groupedByDay).map((e) => ({
+      count: e.count,
+      date: dayjs(e.data).format("YYYY/MM/DD"),
+    })),
     };
   }
   async findByBI(numberBI: string) {

@@ -78,6 +78,7 @@ export class DriverUseCase {
         email: true,
         createdAt: true,
         tel: true,
+        coordenadas:true,
         veiculo: {
           select: {
             matricula: true,
@@ -91,6 +92,7 @@ export class DriverUseCase {
       },
     });
     if (!driver) throw new Error("Motorista ñ encontrado!");
+
     const rowValue = await db.recolha.groupBy({
       by: ["status"],
       where: {
@@ -101,6 +103,7 @@ export class DriverUseCase {
       },
       _count: true,
     });
+
     const heatData = await db.recolha.groupBy({
       by: ["createdAt"],
       where: {
@@ -114,14 +117,28 @@ export class DriverUseCase {
         createdAt: "asc",
       },
     });
+
+
+    const groupedByDay: { [key: string]: { count: number; data: string } } = {};
+
+    heatData.forEach((e) => {
+      const date = new Date(e.createdAt);
+      date.setHours(0, 0, 0, 0);
+      const dateKey = date.toISOString();
+      if (!groupedByDay[dateKey]) {
+        groupedByDay[dateKey] = { count: 0, data: dateKey };
+      }
+      groupedByDay[dateKey].count += e._count;
+    });
+
+
+
     return {
       driver,
-      heatMap: heatData.map((e) => {
-        return {
-          date: dayjs(e.createdAt).format("YYYY/MM/DD"),
-          count: e._count,
-        };
-      }),
+      heatMap: Object.values(groupedByDay).map((e) => ({
+        count: e.count,
+        date: dayjs(e.data).format("YYYY/MM/DD"),
+      })),
       row: {
         finalizada: rowValue[0] ? rowValue[0]._count : 0,
         cancelada: rowValue[1] ? rowValue[1]._count : 0,
@@ -145,6 +162,23 @@ export class DriverUseCase {
         filialId,
       },
     });
+  }
+  async updateFilial({ id, filialId, key, managerId }: { id: string, key: string, filialId: string, managerId: string }) {
+    await prisma.driver.find(id)
+    await prisma.manager.autorize({
+      id: managerId,
+      password: key,
+    });
+
+    await db.driver.update({
+      data: {
+        filialId,
+      },
+      where: {
+        id,
+      },
+    });
+    return;
   }
   async updateStatus({ id, status, filialId }: updateStatusProps) {
     await prisma.driver.findOnFilial({
