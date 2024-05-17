@@ -252,14 +252,14 @@ app.get("/merd/:id", async (req, reply) => {
   }
 });
 
-/* setInterval(
+setInterval(
     async () => {
       await seedRecolhas();
     },
 Math.floor(Math.random() * 99999)
 //   Math.floor(Math.random() * 80)
   );
-*/
+
 app
   .listen({
     host: "0.0.0.0",
