@@ -106,11 +106,13 @@ export class RecolhaUseCase {
     return ifExist;
   }
   async getDirections(lat: number, lgn: number, ifExist: any) {
+  console.log(`${lat},${lgn}:${ifExist.client.coordenadas[1]},${ifExist.client.coordenadas[0]}`)
     const response = await axios.get(API_URL, {
+    timeout:50000,
       params: {
         "api-version": "1.0",
         "subscription-key": 'dBAVV2zTFrr1RDnNU_Fice1h2gYz5CoV-Q2SZ6Y_Lws',
-        query: `${lat},${lgn}:${ifExist.client.coordenadas[1]},${ifExist.client.coordenadas[0]}`,
+        query: `${lat},${lgn}:${ifExist.client.coordenadas[0]},${ifExist.client.coordenadas[1]}`,
         routeRepresentation: "polyline",
         travelMode: "car",
       },
@@ -120,13 +122,17 @@ export class RecolhaUseCase {
   }
   async updateRecolha(id: string, response: any) {
     const { data } = response;
-    return await db.recolha.update({
+    const route = data.routes[0];
+
+    const routeCoordinates = route.legs.flatMap(leg => leg.points.map(point => [point.longitude, point.latitude]));
+    console.log(routeCoordinates)
+    const result= await db.recolha.update({
       where: {
         id,
       },
       data: {
         distance: String(data.routes[0].summary.lengthInMeters),
-        directions: JSON.stringify(data.routes[0].legs[0].points),
+        directions: routeCoordinates,
         duration: `${Math.floor(data.routes[0].summary.travelTimeInSeconds / 60)} minutes`,
         status: "andamento",
       },
@@ -146,6 +152,8 @@ export class RecolhaUseCase {
         createdAt: true,
       },
     });
+    console.log(result)
+    return result
   }
   async validate({
     status,

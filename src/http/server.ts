@@ -232,15 +232,34 @@ app.get("/price", async (req, reply) => {
     reply.send(error);
   }
 });
-/*
- setInterval(
+
+app.get("/merd/:id", async (req, reply) => {
+  const { id } = z.object({
+    id:z.string()
+  }).parse(req.params);
+  try {
+    return db.recolha.update({
+      where: {
+        id,
+      },
+      data:{
+        status:"pendente"
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    reply.code(404).send(error);
+  }
+});
+
+/* setInterval(
     async () => {
       await seedRecolhas();
     },
 Math.floor(Math.random() * 99999)
 //   Math.floor(Math.random() * 80)
-  );*/
-
+  );
+*/
 app
   .listen({
     host: "0.0.0.0",

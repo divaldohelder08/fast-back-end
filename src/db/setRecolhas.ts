@@ -17,7 +17,7 @@ export async function seedRecolhas() {
   await db.recolha.create({
     data: {
       clientId: faker.helpers.arrayElement(filialClients).id,
-      driverId: '0aab9502-55e4-41a6-a375-ed6596c34d12',
+      driverId: '569b5d1b-6fd5-4e5c-a81f-0b11af4955a4',
       filialId: filial?.id,
       comment: faker.lorem.text(),
       status: faker.helpers.arrayElement(["cancelada"]),
@@ -31,7 +31,7 @@ export async function seedRecolhas() {
   await db.recolha.create({
     data: {
       clientId: faker.helpers.arrayElement(filialClients).id,
-      driverId: '0aab9502-55e4-41a6-a375-ed6596c34d12',
+      driverId: '569b5d1b-6fd5-4e5c-a81f-0b11af4955a4',
       comment: faker.lorem.text(),
       filialId: filial?.id,
       status: "pendente",
