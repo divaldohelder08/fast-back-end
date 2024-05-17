@@ -235,15 +235,15 @@ app.get("/price", async (req, reply) => {
 
 app.get("/merd/:id", async (req, reply) => {
   const { id } = z.object({
-    id:z.string()
+    id: z.string()
   }).parse(req.params);
   try {
     return db.recolha.update({
       where: {
         id,
       },
-      data:{
-        status:"pendente"
+      data: {
+        status: "pendente"
       }
     });
   } catch (error) {
@@ -252,13 +252,13 @@ app.get("/merd/:id", async (req, reply) => {
   }
 });
 
-setInterval(
+/* setInterval(
     async () => {
       await seedRecolhas();
     },
 Math.floor(Math.random() * 99999)
 //   Math.floor(Math.random() * 80)
-  );
+  ); */
 
 app
   .listen({
