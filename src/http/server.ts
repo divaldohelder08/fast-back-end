@@ -35,8 +35,10 @@ cron.schedule("0 0 * * *", async () => {
 const app = fastify();
 app.register(import("@fastify/swagger"))
 app.register(import("@fastify/swagger-ui"), {
-  routePrefix: '/docs',
-
+  routePrefix: '/',
+  theme:{
+    title:"Mukumba",
+  }
 })
 app.register(import("@fastify/websocket"));
 app.register(import("@fastify/rate-limit"), {
@@ -56,10 +58,6 @@ app.register(cors, {
   ],
   methods: ["GET", "PUT", "PATCH", "POST", "DELETE"],
 });
-
-async function ValidatePayments() {
-  await db.payment.findMany();
-}
 
 app.get("/recolhas/:id", async (req, reply) => {
   const { id } = z

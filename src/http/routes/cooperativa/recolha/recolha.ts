@@ -26,7 +26,6 @@ export async function Recolha(fastify: FastifyInstance) {
   fastify.delete("/:id", async (req, reply) => {
     const user = req.super;
     if (!user) return reply.code(401).send({ message: "Token invalido" });
-    console.log("deletando");
     const { id } = z
       .object({
         id: z.string(),

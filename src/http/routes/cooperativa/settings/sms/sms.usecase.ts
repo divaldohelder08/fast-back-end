@@ -15,7 +15,6 @@ class SmSUseCase {
         for (const e of drivers) {
           await page.goto(`https://web.whatsapp.com/send?phone=${e.tel}&text=${message}`);
           await page.click('span[data-icon="send"]');
-          console.log("vgcf")
           // await page.waitForSelector('span[data-icon="send"]');
         }
         console.log("Messagens enviadas com sucesso")

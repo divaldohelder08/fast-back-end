@@ -38,7 +38,7 @@ export class DriverUseCase {
       },
     });
 
-    
+
     if (!user || !user.filial) {
       throw new Error("Credenciais inválidas");
     }
@@ -47,10 +47,7 @@ export class DriverUseCase {
       id: user.id,
       filialId: user.filial.id,
     });
-    console.log({
-      user,
-      token,
-    });
+
     return {
       user,
       token,

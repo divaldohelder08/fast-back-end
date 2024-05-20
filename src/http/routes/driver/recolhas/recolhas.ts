@@ -1,10 +1,11 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { RecolhaUseCase } from "./recolhas-usecase";
+import { Driverschema } from "../../../../lib/swagger";
 
 export async function Recolha(fastify: FastifyInstance) {
   const recolhaUseCase = new RecolhaUseCase();
-  fastify.get("/", async (req, reply) => {
+  fastify.get("/", Driverschema, async (req, reply) => {
     const driver = req.driver;
     if (!driver) return reply.code(401).send({ message: "Token invalido" });
     try {
@@ -14,7 +15,7 @@ export async function Recolha(fastify: FastifyInstance) {
       reply.send(error);
     }
   });
-  fastify.patch("/:id/andamento", async (req, reply) => {
+  fastify.patch("/:id/andamento", Driverschema, async (req, reply) => {
     const { id } = z
       .object({
         id: z.string(),
@@ -39,7 +40,7 @@ export async function Recolha(fastify: FastifyInstance) {
       reply.send(error);
     }
   });
-  fastify.patch("/:id/cancelar", async (req, reply) => {
+  fastify.patch("/:id/cancelar", Driverschema, async (req, reply) => {
     const { id } = z
       .object({
         id: z.string(),
@@ -52,7 +53,7 @@ export async function Recolha(fastify: FastifyInstance) {
       reply.send(error);
     }
   });
-  fastify.patch("/:id/finalizar", async (req, reply) => {
+  fastify.patch("/:id/finalizar", Driverschema, async (req, reply) => {
     const { id } = z
       .object({
         id: z.string(),
@@ -65,7 +66,7 @@ export async function Recolha(fastify: FastifyInstance) {
       reply.send(error);
     }
   });
-  fastify.get("/validate", async (req, reply) => {
+  fastify.get("/validate", Driverschema, async (req, reply) => {
     const { status, id } = z
       .object({
         id: z.string(),

@@ -14,7 +14,7 @@ const recolhaProps = z.object({
 });
 export type recolhaPdf = z.infer<typeof recolhaProps>;
 export async function pdf(fastify: FastifyInstance) {
-  const pdfUseCase=new PdfUseCase()
+  const pdfUseCase = new PdfUseCase()
   fastify.post("/recolhas", async (req, rep) => {
     const {
       client,
@@ -22,11 +22,9 @@ export async function pdf(fastify: FastifyInstance) {
       status,
       range,
     } = recolhaProps.parse(req.body);
-    try{
-        const ola=await pdfUseCase.recolha({ client, status, range, driver })
-        console.log(ola)
-      rep.send(ola)
-    }catch(error){
+    try {
+      rep.send(await pdfUseCase.recolha({ client, status, range, driver }))
+    } catch (error) {
       rep.send(error)
     }
   });

@@ -1,15 +1,15 @@
 import dayjs from "dayjs";
 import { db } from "../../../../db/connection";
 import type { decodedUserIdProps } from "../../../../types";
-interface findRecolhaProps {
-  client: string;
-  driver: string;
-}
+import { prisma } from "../../../../utils/prisma-throws";
 
 export class RecolhaUseCase {
-  async find({ client: clientName, driver: driverName }: findRecolhaProps) {
+  async find({ client: clientName, driver: driverName }: {
+    client: string;
+    driver: string;
+  }) {
     const startDate = dayjs().subtract(1, "M");
-    const old = await db.recolha.findMany({
+    return await db.recolha.findMany({
       where: {
         createdAt: {
           gte: startDate.startOf("day").toDate(),
@@ -49,20 +49,9 @@ export class RecolhaUseCase {
         createdAt: true,
       },
     });
-    console.log(old);
-    return old;
   }
   async delete({ id }: decodedUserIdProps) {
-    if (
-      !(await db.recolha.findUnique({
-        where: {
-          id,
-        },
-      }))
-    ) {
-      throw Error("Recolha não encontrada!");
-    }
-
+    prisma.recolha.findError(id)
     await db.recolha.delete({
       where: {
         id,

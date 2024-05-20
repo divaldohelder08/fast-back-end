@@ -5,8 +5,6 @@ import { ClientUseCase } from "./client-usecase";
 export async function Client(fastify: FastifyInstance) {
   const clientUseCase = new ClientUseCase();
   fastify.get("/", async (req, reply) => {
-    const user = req.super;
-    if (!user) return reply.code(401).send({ message: "Token invalido" });
     try {
       return reply.send(await clientUseCase.find());
     } catch (error) {
@@ -47,17 +45,14 @@ export async function Client(fastify: FastifyInstance) {
         id: z.string(),
       })
       .parse(req.params);
-    console.log(id);
     try {
-      return reply.send(await clientUseCase.findById({ id }));
+      return reply.send(await clientUseCase.findById(id));
     } catch (error) {
       console.error(error);
       reply.send(error);
     }
   });
   fastify.get("/geo-map", async (req, reply) => {
-    const user = req.super;
-    if (!user) return reply.code(401).send({ message: "Token invalido" });
     const { numberBI } = z
       .object({
         numberBI: z.string(),
@@ -65,11 +60,7 @@ export async function Client(fastify: FastifyInstance) {
       .parse(req.query);
 
     try {
-      return reply.send(
-        await clientUseCase.geoMap({
-          numberBI,
-        })
-      );
+      return reply.send(await clientUseCase.geoMap(numberBI));
     } catch (error) {
       console.error(error);
       reply.send(error);

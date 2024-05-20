@@ -129,6 +129,7 @@ export class RecolhaUseCase {
       },
       select: {
         id: true,
+        status:true,
         driver: {
           select: {
             name: true,

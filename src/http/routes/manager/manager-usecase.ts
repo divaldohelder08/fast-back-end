@@ -108,10 +108,6 @@ class ManagerUseCase {
       id: userInfo.id,
       filialId: userInfo.filial.id,
     });
-    console.log({
-      user: userInfo,
-      token,
-    });
     await db.filial.updateMany({
       data: {
         status: "aberta",

@@ -43,8 +43,6 @@ export async function Pdf(fastify: FastifyInstance) {
     }
   });
   fastify.get("/clients", async (req, reply) => {
-    console.log("ola");
-
     const manager = req.manager;
     if (!manager) return reply.code(401).send({ message: "Token invalido" });
     const { status } = z

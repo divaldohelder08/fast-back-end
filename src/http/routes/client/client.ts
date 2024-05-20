@@ -4,6 +4,7 @@ import { ClientMiddleware } from "../../middleware/client";
 import { ClientUseCase } from "./client-usecase";
 import { Recolha } from "./recolha/recolha";
 import { Settings } from "./settings/settings";
+import { Clientchema } from "../../../lib/swagger";
 
 export const ClientAuthSchema = z.object({
   email: z.string().email({ message: "Formato de email inválido" }),
@@ -14,7 +15,7 @@ export type clientAuthData = z.infer<typeof ClientAuthSchema>;
 export default async function Client(fastify: FastifyInstance) {
   const clientUseCase = new ClientUseCase();
   fastify.addHook("preHandler", ClientMiddleware);
-  fastify.get("/profile", async (req, reply) => {
+  fastify.get("/profile",Clientchema, async (req, reply) => {
     const client = req.client;
     if (!client) return reply.code(401).send({ message: "Token invalido" });
     try {
@@ -25,7 +26,7 @@ export default async function Client(fastify: FastifyInstance) {
       reply.code(500).send({ message: "Erro ao buscar perfil" });
     }
   });
-  fastify.get("/dashboard", async (req, reply) => {
+  fastify.get("/dashboard",Clientchema, async (req, reply) => {
     const client = req.client;
     if (!client) return reply.code(401).send({ message: "Token invalido" });
     try {

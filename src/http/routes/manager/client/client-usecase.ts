@@ -53,10 +53,7 @@ async findById({ id, filialId }: clientByIdProps) {
   const heatData = await db.recolha.groupBy({
     by: ["createdAt"],
     where: {
-      clientId: id,
-      status: {
-        in: ["finalizada", "cancelada"],
-      },
+      clientId: id
     },
     _count: true,
     orderBy: {

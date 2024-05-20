@@ -191,10 +191,25 @@ export class PrismaAgentValidations {
   }
 }
 
+export class PrismaRecolhaValidations {
+  async findError(id: string) {
+    const result = await db.recolha.findUnique({
+      where: {
+        id,
+      },
+    })
+    if (!result)
+      throw Error("Recolha não encontrada!");
+
+  }
+
+}
+
 export const prisma = {
   filial: new PrismaFilialValidations(),
   manager: new PrismaManagerValidations(),
   client: new PrismaClientValidations(),
   driver: new PrismaDriverValidations(),
   agents: new PrismaAgentValidations(),
+  recolha: new PrismaRecolhaValidations()
 };

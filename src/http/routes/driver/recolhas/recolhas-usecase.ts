@@ -57,7 +57,6 @@ export class RecolhaUseCase {
       const response = await this.getDirections(lat, lgn, ifExist);
       return await this.updateRecolha(id, response);
     } catch (error) {
-      console.log(error, "eresdkijfvsnd")
       throw new Error("Erro ao manipular andamento");
     }
   }
@@ -125,7 +124,6 @@ export class RecolhaUseCase {
     const route = data.routes[0];
 
     const routeCoordinates = route.legs.flatMap((leg: { points: any[]; }) => leg.points.map(point => [point.longitude, point.latitude]));
-    console.log(routeCoordinates)
     const result = await db.recolha.update({
       where: {
         id,
@@ -152,7 +150,6 @@ export class RecolhaUseCase {
         createdAt: true,
       },
     });
-    console.log(result)
     return result
   }
   async validate({

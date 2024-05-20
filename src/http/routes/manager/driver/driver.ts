@@ -86,7 +86,6 @@ export async function Driver(fastify: FastifyInstance) {
     if (!manager) return reply.code(401).send({ message: "Token invalido" });
     const { numberBI, name, tel, email, nascimento, matricula, sexo, avatar } =
       createDriverSchema.parse(req.body);
-    console.log("criando");
     try {
       await driverUseCase.create({
         numberBI,

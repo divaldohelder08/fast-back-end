@@ -27,13 +27,11 @@ export async function Recolha(fastify: FastifyInstance) {
     }
   });
   fastify.get("/:id", async (req, reply) => {
-    console.log("aqui");
     const { id } = z
       .object({
         id: z.string(),
       })
       .parse(req.params);
-    console.log(id);
     const manager = req.manager;
     if (!manager) return reply.code(401).send({ message: "Token invalido" });
     try {
@@ -49,7 +47,6 @@ export async function Recolha(fastify: FastifyInstance) {
   fastify.delete("/:id", async (req, reply) => {
     const manager = req.manager;
     if (!manager) return reply.code(401).send({ message: "Token invalido" });
-    console.log("deletando");
     const { id } = z
       .object({
         id: z.string(),

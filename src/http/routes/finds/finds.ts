@@ -1,37 +1,29 @@
 import type { FastifyInstance } from "fastify"
 import { FindUseCase } from "./find-useCase"
 import { z } from "zod"
+import { Schema } from "../../../lib/swagger"
+const schema = { schema: Schema(["finds"]) }
 
 export async function Finds(fastify: FastifyInstance) {
     const findUseCase = new FindUseCase()
-    fastify.get("/filias", {
-        schema: {
-            tags: ["Finds"],
-        }
-    }, async (req, reply) => {
+    fastify.get("/filias", schema, async (req, reply) => {
         try {
             return reply.send(await findUseCase.filias())
         } catch (error) {
             console.error(error)
         }
     })
-    fastify.get("/agents", async (req, reply) => {
+    fastify.get("/agents", schema, async (req, reply) => {
         try {
             return reply.send(await findUseCase.agents())
         } catch (error) {
             console.error(error)
         }
     })
-
-
-
-
-    fastify.get("/filial/:id", async (req, reply) => {
+    fastify.get("/filial/:id", schema, async (req, reply) => {
         const { id } = z.object({
             id: z.string()
         }).parse(req.params)
-
-
         try {
             return reply.send(await findUseCase.findName({ id }))
         } catch (error) {
@@ -40,21 +32,21 @@ export async function Finds(fastify: FastifyInstance) {
         }
     })
 
-    fastify.get("/clients", async (req, reply) => {
+    fastify.get("/clients", schema, async (req, reply) => {
         try {
             return reply.send(await findUseCase.clients())
         } catch (error) {
             console.error(error)
         }
     })
-    fastify.get("/drivers", async (req, reply) => {
+    fastify.get("/drivers", schema, async (req, reply) => {
         try {
             return reply.send(await findUseCase.drivers())
         } catch (error) {
             console.error(error)
         }
     })
-    fastify.get("/managers", async (req, reply) => {
+    fastify.get("/managers", schema, async (req, reply) => {
         try {
             return reply.send(await findUseCase.managers())
         } catch (error) {

@@ -34,11 +34,8 @@ export class ClientUseCase {
       },
     });
   }
-  async findById({ id, filialId }: clientByIdProps) {
-    await prisma.client.findOnFilial({
-      id,
-      filialId,
-    });
+  async findById(id: string) {
+    await prisma.client.find(id);
 
     const heatData = await db.recolha.groupBy({
       by: ["createdAt"],
@@ -69,8 +66,7 @@ export class ClientUseCase {
     return {
       client: await db.client.findUnique({
         where: {
-          id,
-          filialId,
+          id
         },
         select: {
           avatar: true,
@@ -79,8 +75,8 @@ export class ClientUseCase {
           createdAt: true,
           status: true,
           tel: true,
-          address:true,
-          coordenadas:true,
+          address: true,
+          coordenadas: true,
           filial: {
             select: {
               name: true,
@@ -99,7 +95,7 @@ export class ClientUseCase {
       })),
     };
   }
-  async geoMap({ numberBI }: geoMapFilter1) {
+  async geoMap(numberBI: string) {
     return await db.client.findMany({
       select: {
         id: true,
