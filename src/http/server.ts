@@ -36,9 +36,6 @@ const app = fastify();
 app.register(import("@fastify/swagger"))
 app.register(import("@fastify/swagger-ui"), {
   routePrefix: '/',
-  theme:{
-    title:"Mukumba",
-  }
 })
 app.register(import("@fastify/websocket"));
 app.register(import("@fastify/rate-limit"), {
