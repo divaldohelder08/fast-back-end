@@ -53,7 +53,7 @@ export async function Recolha(fastify: FastifyInstance) {
       reply.send(error);
     }
   });
-  fastify.patch("/:id/finalizar", Driverschema, async (req, reply) => {
+  fastify.post("/:id/finalizar", Driverschema, async (req, reply) => {
     const { id } = z
       .object({
         id: z.string(),
