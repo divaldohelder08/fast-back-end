@@ -4,7 +4,7 @@ import type { driverAuthData } from "./driver";
 
 export class DriverUseCase {
   async profile(id: string) {
-    return db.driver.findFirst({
+    return await db.driver.findFirst({
       where: {
         id,
       },
@@ -16,6 +16,16 @@ export class DriverUseCase {
         createdAt: true,
         tel: true,
       },
+    });
+  }
+  async location({ coordenadas, id }: { coordenadas: number[], id: string }) {
+    await db.driver.update({
+      where: {
+        id,
+      },
+      data: {
+        coordenadas
+      }
     });
   }
   async authenticate({ email, password }: driverAuthData) {

@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { db } from "../../../../db/connection";
 import { prisma } from "../../../../utils/prisma-throws";
 
@@ -100,7 +101,7 @@ export class RecolhaUseCase {
   }
   async create({ clientId, filialId }: { clientId: string, filialId: string }) {
     await prisma.client.find(clientId)
-
+    const now = dayjs().startOf("hours").set("hour", 1).toDate()
     const filial = await db.filial.findUnique(
       {
         where: {
@@ -110,7 +111,63 @@ export class RecolhaUseCase {
       }
     )
     if (!filial) throw new Error("A filial não se encontra aberta")
+    const avaliablesDrivers = await db.driver.findMany({
+      orderBy: {
+        recolhas: {
+          _count: "asc"
+        }
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        // _count: {
+        //   select: {
+        //     recolhas: true
+        //   }
+        // }
+      },
+      where: {
+        filialId,
+        status: "On",
 
+        recolhas: {
+          some: {
+            status: "pendente",
+            createdAt: {
+              gte: now
+            },
+          }
+        },
+      },
+    })
+
+    const recos = await db.recolha.findMany({
+      where: {
+        clientId,
+        status: {
+          in: ["pendente", "andamento"]
+        },
+        createdAt: {
+          gte: now
+        }
+      }
+    })
+    
+    for (const reco of recos) {
+      await db.recolha.update({
+        where: {
+          id: reco.id,
+          clientId: reco.clientId,
+        },
+        data: {
+          status: "cancelada"
+        }
+      })
+    }
+
+
+    // if (!avaliablesDrivers[0]) throw new Error("Nenhum motorista se encontra a trabalhar")
     const driver = await db.driver.findFirst({
       where: {
         filialId,
@@ -119,17 +176,16 @@ export class RecolhaUseCase {
     })
 
     if (!driver) throw new Error("Nenhum motorista se encontra a trabalhar")
-
     return await db.recolha.create({
       data: {
         clientId,
-        driverId: driver?.id,
+        driverId: driver.id,
         filialId,
         status: "pendente",
       },
       select: {
         id: true,
-        status:true,
+        status: true,
         driver: {
           select: {
             name: true,

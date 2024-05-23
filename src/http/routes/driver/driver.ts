@@ -15,6 +15,20 @@ export type driverAuthData = z.infer<typeof DriverAuthSchema>;
 export default async function Driver(fastify: FastifyInstance) {
   const driverUseCase = new DriverUseCase();
   fastify.addHook("preHandler", DriverMiddleware);
+  fastify.post("/location", Driverschema, async (req, reply) => {
+    const driver = req.driver;
+    if (!driver) return reply.code(401).send({ message: "Token invalido" });
+    const { coords } = z.object({
+      coords: z.number().array().min(2, "Min 2").max(2, "Max 2"),
+    }).parse(req.body)
+    try {
+      await driverUseCase.location({ id: driver.id, coordenadas: coords });
+      return reply.code(204).send("Senha atualizada com sucesso!");
+    } catch (error) {
+      console.error(error);
+      reply.code(500).send({ message: "Erro ao atualizar localização" });
+    }
+  })
   fastify.get("/profile", Driverschema, async (req, reply) => {
     const driver = req.driver;
     if (!driver) return reply.code(401).send({ message: "Token invalido" });
