@@ -63,4 +63,22 @@ export async function Recolha(fastify: FastifyInstance) {
       reply.code(500).send(error);
     }
   });
+  fastify.patch("/:id/update-comment", async (req, reply) => {
+    const client = req.client;
+    if (!client) return reply.code(401).send({ message: "Token invalido" });
+    const { id } = z.object({
+      id: z.string({ required_error: "RECOLHAID_NOT_NULL" }).min(1, "RECOLHAID NOT NULL")
+    }).parse(req.params)
+
+    const { comment } = z.object({
+      comment: z.string({ required_error: "O comentario não pode ser nulo" })
+    }).parse(req.body)
+
+    try {
+      return reply.send(await recolhaUseCase.updateComment({ clientId: client.id, comment, id }));
+    } catch (error) {
+      console.error(error);
+      reply.code(500).send(error);
+    }
+  });
 }

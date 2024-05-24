@@ -112,68 +112,21 @@ export class RecolhaUseCase {
     )
     if (!filial) throw new Error("A filial não se encontra aberta")
     const avaliablesDrivers = await db.driver.findMany({
+      where: {
+        filialId,
+        status: "On",
+      },
       orderBy: {
         recolhas: {
-          _count: "asc"
-        }
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        // _count: {
-        //   select: {
-        //     recolhas: true
-        //   }
-        // }
-      },
-      where: {
-        filialId,
-        status: "On",
-
-        recolhas: {
-          some: {
-            status: "pendente",
-            createdAt: {
-              gte: now
-            },
-          }
+          _count: "asc",
         },
       },
-    })
+      take: 1,
+    });
 
-    const recos = await db.recolha.findMany({
-      where: {
-        clientId,
-        status: {
-          in: ["pendente", "andamento"]
-        },
-        createdAt: {
-          gte: now
-        }
-      }
-    })
-    
-    for (const reco of recos) {
-      await db.recolha.update({
-        where: {
-          id: reco.id,
-          clientId: reco.clientId,
-        },
-        data: {
-          status: "cancelada"
-        }
-      })
-    }
+    if (!avaliablesDrivers[0]) throw new Error("Nenhum motorista se encontra a trabalhar");
 
-
-    // if (!avaliablesDrivers[0]) throw new Error("Nenhum motorista se encontra a trabalhar")
-    const driver = await db.driver.findFirst({
-      where: {
-        filialId,
-        status: "On",
-      }
-    })
+    const driver = avaliablesDrivers[0];
 
     if (!driver) throw new Error("Nenhum motorista se encontra a trabalhar")
     return await db.recolha.create({
@@ -210,5 +163,23 @@ export class RecolhaUseCase {
       },
     });
   }
+  async updateComment({ clientId, comment, id }: { clientId: string, id: string, comment: string }) {
+    await prisma.client.find(clientId)
+    const recolha = await db.recolha.findFirst({
+      where: {
+        id,
+        clientId
+      }
+    })
+    if (!recolha) throw new Error("Recolha não encontrada")
 
+    await db.recolha.update({
+      where: {
+        id,
+      },
+      data: {
+        comment
+      }
+    })
+  }
 }
