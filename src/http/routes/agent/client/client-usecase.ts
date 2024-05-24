@@ -149,7 +149,7 @@ export class ClientUseCase {
   async create({ agentId, numberBI, email, tel, ...rest }: createClient) {
     await prisma.client.numberBIError(numberBI);
     await prisma.client.emailError(email);
-    await prisma.client.telError(email);
+    await prisma.client.telError(tel);
     const priceId = await LastPayment();
 
     await db.payment.create({
