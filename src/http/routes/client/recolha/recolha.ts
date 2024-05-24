@@ -63,7 +63,7 @@ export async function Recolha(fastify: FastifyInstance) {
       reply.code(500).send(error);
     }
   });
-  fastify.patch("/:id/update-comment", async (req, reply) => {
+  fastify.post("/:id/update-comment", async (req, reply) => {
     const client = req.client;
     if (!client) return reply.code(401).send({ message: "Token invalido" });
     const { id } = z.object({
