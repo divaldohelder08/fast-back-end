@@ -65,6 +65,9 @@ export class RecolhaUseCase {
         createdAt: true,
         comment: true,
       },
+      orderBy: {
+        createdAt: "desc"
+      }
     });
 
   }
@@ -74,6 +77,9 @@ export class RecolhaUseCase {
       where: {
         clientId,
         status: "andamento",
+      },
+      orderBy: {
+        createdAt: "desc"
       },
       select: {
         id: true,
@@ -165,14 +171,13 @@ export class RecolhaUseCase {
   }
   async updateComment({ clientId, comment, id }: { clientId: string, id: string, comment: string }) {
     await prisma.client.find(clientId)
-    const recolha = await db.recolha.findFirst({
+    const recolha = await db.recolha.findUnique({
       where: {
-        id,
-        clientId
+        id
       }
     })
     if (!recolha) throw new Error("Recolha não encontrada")
-
+    console.log(recolha)
     await db.recolha.update({
       where: {
         id,
