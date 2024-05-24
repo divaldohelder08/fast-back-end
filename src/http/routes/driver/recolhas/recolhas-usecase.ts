@@ -3,6 +3,7 @@ import { Prisma, db } from "../../../../db/connection";
 import axios from "axios";
 import type { $Enums } from "@prisma/client";
 import { formatSecondsToMinutes } from "../../../../utils/format-time";
+import convert from "convert-units";
 
 const API_URL = "https://atlas.microsoft.com/route/directions/json";
 
@@ -124,12 +125,13 @@ export class RecolhaUseCase {
     const route = data.routes[0];
 
     const routeCoordinates = route.legs.flatMap((leg: { points: any[]; }) => leg.points.map(point => [point.longitude, point.latitude]));
+    // const a= meters
     const result = await db.recolha.update({
       where: {
         id,
       },
       data: {
-        distance: String(data.routes[0].summary.lengthInMeters),
+        distance: convert(route.summary.lengthInMeters).from("m").to("km").toString(),
         directions: routeCoordinates,
         duration: formatSecondsToMinutes(data.routes[0].summary.travelTimeInSeconds),
         status: "andamento",

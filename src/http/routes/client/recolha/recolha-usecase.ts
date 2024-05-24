@@ -178,6 +178,7 @@ export class RecolhaUseCase {
     })
     if (!recolha) throw new Error("Recolha não encontrada")
     console.log(recolha)
+  
     await db.recolha.update({
       where: {
         id,
