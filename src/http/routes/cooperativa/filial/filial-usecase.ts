@@ -264,7 +264,7 @@ export class FilialUseCase {
     });
   }
   async geoMap(name: string) {
-    return await db.filial.findMany({
+    const vals= await db.filial.findMany({
       select: {
         id: true,
         name: true,
@@ -283,5 +283,6 @@ export class FilialUseCase {
         }
       },
     });
+    return vals
   }
 }

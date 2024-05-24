@@ -66,7 +66,6 @@ export class MetricsUseCase {
         dayjs(orderInDay.createdAt).isSame(yesterday, "day")
       )
       .reduce((total, order) => total + order._count, 0);
-    console.log("yesterdayOrdersAmount", yesterdayOrdersAmount);
 
     // a diferença das recolhas do dia de hoje com as de ontem se o houver recolha nos dias
     const diffFromYesterday =
@@ -118,7 +117,7 @@ export class MetricsUseCase {
     const diffFromLastMonthCancelled =
       lastMonthCancelledRecolhasAmount && currentMonthCancelledRecolhaAmount
         ? (currentMonthCancelledRecolhaAmount * 100) /
-          lastMonthCancelledRecolhasAmount
+        lastMonthCancelledRecolhasAmount
         : null;
 
     return {
@@ -164,10 +163,7 @@ export class MetricsUseCase {
       lastMonthRecolhasAmount && currentMonthRecolhaAmount
         ? (currentMonthRecolhaAmount * 100) / lastMonthRecolhasAmount
         : null;
-    console.log(
-      "mothAmount",
-      diffFromLastMonth ? Number((diffFromLastMonth - 100).toFixed(2)) : 0
-    );
+
     return {
       amount: currentMonthRecolhaAmount ?? 0,
       diffFromLastMonth: diffFromLastMonth
@@ -212,10 +208,7 @@ export class MetricsUseCase {
       lastMonthPaymentAmount && currentMonthPaymentAmount
         ? (currentMonthPaymentAmount * 100) / lastMonthPaymentAmount
         : null;
-    console.log(
-      "payment",
-      diffFromLastMonth ? Number((diffFromLastMonth - 100).toFixed(2)) : 0
-    );
+
     return {
       amount: currentMonthPaymentAmount ?? 0, // usar o total do preço dos pagamentos
       diffFromLastMonth: diffFromLastMonth

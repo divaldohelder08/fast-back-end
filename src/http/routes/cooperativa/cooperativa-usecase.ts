@@ -1,3 +1,4 @@
+import chalk from "chalk";
 import { db } from "../../../db/connection";
 import { encrypt } from "../../../lib/jose";
 import type { decodedUserIdProps } from "../../../types";
@@ -52,10 +53,8 @@ export class CooperativaUseCase {
     }
 
     const token = await encrypt({ id: user.id });
-    console.log({
-      user,
-      token,
-    });
+    console.log(chalk.yellow("New user logged"))
+    console.log(user, 'cooperativa');
     return {
       user,
       token,

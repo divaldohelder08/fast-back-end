@@ -24,12 +24,9 @@ import Client, { ClientAuthSchema } from "./routes/client/client";
 import { ClientUseCase } from "./routes/client/client-usecase";
 import cron from "node-cron";
 import { paymentExpired } from "./middleware/remove-clients";
-import SwaggerJson from "./swagger.json"
-import { Sms } from "./routes/cooperativa/settings/sms/sms";
 
 cron.schedule("0 0 * * *", async () => {
   await paymentExpired();
-  console.log("payments revisados.");
 });
 
 const app = fastify();

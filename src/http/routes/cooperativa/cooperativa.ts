@@ -25,7 +25,6 @@ export async function Cooperativa(fastify: FastifyInstance) {
     if (!manager) return reply.code(401).send({ message: "Token invalido" });
     try {
       const profile = await cooperativaUseCase.user(manager.id);
-      console.log(profile)
       return reply.send(profile);
     } catch (error) {
       console.error(error);

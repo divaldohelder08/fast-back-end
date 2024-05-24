@@ -15,4 +15,5 @@ export async function paymentExpired() {
       },
     },
   });
+  console.log("payments revisados.");
 }

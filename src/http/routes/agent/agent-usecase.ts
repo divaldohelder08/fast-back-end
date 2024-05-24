@@ -3,6 +3,7 @@ import { db } from "../../../db/connection";
 import { encrypt } from "../../../lib/jose";
 import { LastPayment } from "../../../utils/last-payment";
 import type { authenticateData } from "./agent";
+import chalk from "chalk";
 
 class AgentUseCase {
   async profile(id: string) {
@@ -99,7 +100,7 @@ class AgentUseCase {
     return payment;
   }
   async authenticate({ email, filialId }: authenticateData) {
-    const user = await db.agents.findFirst({
+    const userI = await db.agents.findFirst({
       where: {
         email,
         filialId,
@@ -119,31 +120,28 @@ class AgentUseCase {
         },
       },
     });
-    if (!user || !user.filial) throw new Error("Credenciais inválidas");
+    if (!userI || !userI.filial) throw new Error("Credenciais inválidas");
 
-    const userInfo = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      avatar: user.avatar,
-      tel: user.tel,
+    const user = {
+      id: userI.id,
+      name: userI.name,
+      email: userI.email,
+      avatar: userI.avatar,
+      tel: userI.tel,
       filial: {
-        id: user.filial.id,
-        name: user.filial.name,
+        id: userI.filial.id,
+        name: userI.filial.name,
       },
     };
 
     const token = await encrypt({
-      id: userInfo.id,
-      filialId: userInfo.filial.id,
+      id: user.id,
+      filialId: user.filial.id,
     });
-
-    console.log({
-      user: userInfo,
-      token,
-    });
+    console.log(chalk.yellow("New user logged"))
+    console.log(user, "agent");
     return {
-      user: userInfo,
+      user,
       token,
     };
   }
