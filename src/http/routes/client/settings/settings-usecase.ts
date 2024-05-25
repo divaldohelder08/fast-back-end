@@ -1,5 +1,6 @@
 import { db } from "../../../../db/connection";
 import type { decodedUserIdProps, updateKeyProps } from "../../../../types";
+import { prisma } from "../../../../utils/prisma-throws";
 
 interface updateProfileType extends decodedUserIdProps {
   name: string;
@@ -30,6 +31,7 @@ export class SettingsUseCase {
     });
   }
   async updateProfile({ avatar, email, tel, id }: updateProfileType) {
+    await prisma.client.find(id)
     await db.client.update({
       where: {
         id,

@@ -4,7 +4,7 @@ import { decrypt } from "../../lib/jose";
 import type { jwtPayloadSchema } from "../../types";
 
 import { NotAgentError, UnauthorizedError } from "../routes/Errors";
-import { paymentExpired } from "./remove-clients";
+import { paymentExpired } from "./update-clients-payments";
 export async function AgentMiddleware(req: FastifyRequest, rep: FastifyReply) {
   const token = req.headers.authorization?.replace(/^Bearer /, "");
   if (!token) return rep.code(401).send({ message: "Token missing" });

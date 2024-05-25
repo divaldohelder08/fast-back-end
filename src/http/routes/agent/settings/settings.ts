@@ -60,7 +60,7 @@ export async function Settings(fastify: FastifyInstance) {
       return reply.code(204).send("Perfil atualizado com sucesso!");
     } catch (error) {
       console.error(error);
-      reply.code(500).send({ message: "Erro ao atualizar perfil!" });
+      reply.code(500).send(error);
     }
   });
   fastify.patch("/update-key", async (req, reply) => {

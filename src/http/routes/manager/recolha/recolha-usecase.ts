@@ -101,9 +101,8 @@ export class RecolhaUseCase {
         },
       },
     });
-    if (!recolha) {
+    if (!recolha)
       throw new Error("Recolha não encontrada!");
-    }
     return recolha;
   }
   async delete({ id, filialId, recolhaId }: deleteRecolhaProps) {

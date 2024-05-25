@@ -8,6 +8,7 @@ import { LastPayment } from "../../../utils/last-payment";
 
 export class ClientUseCase {
   async profile(id: string) {
+    await prisma.client.find(id)
     const user = await db.client.findFirst({
       where: {
         id,

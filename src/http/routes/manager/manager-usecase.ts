@@ -1,6 +1,7 @@
 import { db } from "../../../db/connection";
 import { encrypt } from "../../../lib/jose";
 import type { decodedUserProps } from "../../../types";
+import { prisma } from "../../../utils/prisma-throws";
 import type { authenticateData } from "./manager";
 
 class ManagerUseCase {
@@ -49,6 +50,7 @@ class ManagerUseCase {
     });
   }
   async profile({ id }: decodedUserProps) {
+    await prisma.manager.findError(id)
     return db.manager.findFirst({
       where: {
         id,

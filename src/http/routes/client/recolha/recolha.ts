@@ -71,7 +71,7 @@ export async function Recolha(fastify: FastifyInstance) {
     }).parse(req.params)
 
     const { comment } = z.object({
-      comment: z.string({ required_error: "O comentario não pode ser nulo" })
+      comment: z.string()
     }).parse(req.body)
 
     try {

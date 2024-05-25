@@ -117,6 +117,35 @@ export class RecolhaUseCase {
       }
     )
     if (!filial) throw new Error("A filial não se encontra aberta")
+
+    const currentAndamento = await db.recolha.findFirst({
+      where: {
+        clientId,
+        createdAt: {
+          gte: now
+        },
+        status: "andamento"
+      },
+    })
+
+    if (currentAndamento) throw new Error("Já exite uma recolha em andamento")
+
+    const olderRecolhas = await db.recolha.updateMany({
+      where: {
+        clientId,
+        createdAt: {
+          gte: now
+        },
+        status: {
+          in: ['pendente']
+        }
+      },
+      data: {
+        status: "cancelada"
+      }
+    })
+
+
     const avaliablesDrivers = await db.driver.findMany({
       where: {
         filialId,
@@ -156,10 +185,7 @@ export class RecolhaUseCase {
     });
   }
   async handleCancel(id: string) {
-    const ifExist = await db.recolha.findFirst({
-      where: { id },
-    });
-    if (!ifExist) throw new Error("Recolha não encontrada");
+    await prisma.recolha.findError(id)
     await db.recolha.update({
       where: {
         id,
@@ -171,14 +197,8 @@ export class RecolhaUseCase {
   }
   async updateComment({ clientId, comment, id }: { clientId: string, id: string, comment: string }) {
     await prisma.client.find(clientId)
-    const recolha = await db.recolha.findUnique({
-      where: {
-        id
-      }
-    })
-    if (!recolha) throw new Error("Recolha não encontrada")
-    console.log(recolha)
-  
+    await prisma.recolha.findError(id)
+
     await db.recolha.update({
       where: {
         id,

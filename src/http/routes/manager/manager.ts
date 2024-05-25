@@ -40,7 +40,7 @@ export async function Manager(fastify: FastifyInstance) {
       return reply.send(profile);
     } catch (error) {
       console.error(error);
-      reply.code(500).send({ message: "Erro ao buscar perfil" });
+      reply.code(500).send(error);
     }
   });
   fastify.register(Pdf, {

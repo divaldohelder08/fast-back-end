@@ -23,7 +23,7 @@ export default async function Client(fastify: FastifyInstance) {
       return reply.send(profile);
     } catch (error) {
       console.error(error);
-      reply.code(500).send({ message: "Erro ao buscar perfil" });
+      reply.code(500).send(error);
     }
   });
   fastify.get("/dashboard",Clientchema, async (req, reply) => {

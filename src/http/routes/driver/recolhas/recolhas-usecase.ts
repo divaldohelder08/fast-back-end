@@ -131,7 +131,7 @@ export class RecolhaUseCase {
         id,
       },
       data: {
-        distance: convert(route.summary.lengthInMeters).from("m").to("km").toString(),
+        distance: `${convert(route.summary.lengthInMeters).from("m").to("km")} Km`,
         directions: routeCoordinates,
         duration: formatSecondsToMinutes(data.routes[0].summary.travelTimeInSeconds),
         status: "andamento",

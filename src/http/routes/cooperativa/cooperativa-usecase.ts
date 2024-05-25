@@ -3,9 +3,11 @@ import { db } from "../../../db/connection";
 import { encrypt } from "../../../lib/jose";
 import type { decodedUserIdProps } from "../../../types";
 import type { authenticateData } from "./cooperativa";
+import { prisma } from "../../../utils/prisma-throws";
 
 export class CooperativaUseCase {
   async user(id: string) {
+    await prisma.manager.findError(id)
     return await db.manager.findFirst({
       where: {
         id,
@@ -19,6 +21,7 @@ export class CooperativaUseCase {
     });
   }
   async profile({ id }: decodedUserIdProps) {
+    await prisma.manager.findError(id)
     return await db.manager.findFirst({
       where: {
         id,

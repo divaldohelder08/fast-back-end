@@ -1,4 +1,5 @@
 import { db } from "../../../../db/connection";
+import { prisma } from "../../../../utils/prisma-throws";
 import type { formEditProfileData } from "./settings";
 
 interface updateProfile extends formEditProfileData {
@@ -32,6 +33,7 @@ class SettingsUseCase {
     antiga: string;
     nova: string;
   }) {
+    await prisma.agents.find(id)
     const agent = await db.agents.findUnique({
       where: {
         password: antiga,
@@ -52,6 +54,7 @@ class SettingsUseCase {
     });
   }
   async updateProfile({ avatar, email, name, id, tel }: updateProfile) {
+    await prisma.agents.find(id)
     await db.agents.update({
       where: {
         id,

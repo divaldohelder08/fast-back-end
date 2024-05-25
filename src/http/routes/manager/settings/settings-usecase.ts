@@ -4,6 +4,7 @@ import type {
   filialId,
   updateKeyProps,
 } from "../../../../types";
+import { prisma } from "../../../../utils/prisma-throws";
 
 interface updateProfileType extends decodedUserIdProps {
   name: string;
@@ -41,6 +42,7 @@ export class SettingsUseCase {
     });
   }
   async updateKey({ antiga, id, nova }: updateKeyProps) {
+    await prisma.manager.findError(id)
     const manager = await db.manager.findUnique({
       where: {
         password: antiga,
@@ -59,6 +61,7 @@ export class SettingsUseCase {
     });
   }
   async updateProfile({ avatar, email, name, id }: updateProfileType) {
+    await prisma.manager.findError(id)
     await db.manager.update({
       where: {
         id,
@@ -71,6 +74,7 @@ export class SettingsUseCase {
     });
   }
   async updateTel({ tel, id }: updateTelProps) {
+    await prisma.manager.findError(id)
     await db.manager.update({
       where: {
         id,

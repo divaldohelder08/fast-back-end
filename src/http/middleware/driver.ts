@@ -3,7 +3,7 @@ import { db } from "../../db/connection";
 import { decrypt } from "../../lib/jose";
 import type { jwtPayloadSchema1 } from "../../types";
 import { NotDriverError, UnauthorizedError } from "../routes/Errors";
-import { paymentExpired } from "./remove-clients";
+import { paymentExpired } from "./update-clients-payments";
 export async function DriverMiddleware(req: FastifyRequest, rep: FastifyReply) {
   const token = req.headers.authorization?.replace(/^Bearer /, "");
   if (!token) return rep.code(401).send({ message: "Token missing" });

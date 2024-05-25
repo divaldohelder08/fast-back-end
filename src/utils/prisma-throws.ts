@@ -1,4 +1,4 @@
-import { db } from "../db/connection";
+import { Prisma, db } from "../db/connection";
 
 interface autorize {
   id: string;
@@ -29,6 +29,27 @@ class PrismaFilialValidations {
 }
 
 export class PrismaManagerValidations {
+  async findError(id: string) {
+    const result = await db.manager.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (!result) throw Error("Gerente não encontrado!");
+  }
+  async findOnFilialError({ id, filialId }: { id: string, filialId?: string }) {
+    const result = await db.manager.findUnique({
+      where: {
+        id,
+        filial: {
+          some: {
+            id: filialId
+          }
+        }
+      },
+    });
+    if (!result) throw Error("Gerente não encontrado!");
+  }
   async telError(tel: string) {
     const result = await db.manager.findUnique({
       where: {
@@ -202,8 +223,9 @@ export class PrismaRecolhaValidations {
       throw Error("Recolha não encontrada!");
 
   }
-
 }
+
+
 
 export const prisma = {
   filial: new PrismaFilialValidations(),

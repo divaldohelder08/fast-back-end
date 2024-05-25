@@ -1,29 +1,28 @@
 import cors from "@fastify/cors";
 import fastify from "fastify";
+import cron from "node-cron";
 import { z } from "zod";
 import { db } from "../db/connection";
-import { seedRecolhas } from "../db/setRecolhas";
+import { paymentExpired } from "./middleware/update-clients-payments";
 import {
   Agent,
   authenticateSchema as agentAuthSchema,
 } from "./routes/agent/agent";
 import { agentUseCase } from "./routes/agent/agent-usecase";
+import Client, { ClientAuthSchema } from "./routes/client/client";
+import { ClientUseCase } from "./routes/client/client-usecase";
 import {
   Cooperativa,
   authenticateSchema as cooperativaAuthSchema,
 } from "./routes/cooperativa/cooperativa";
 import { CooperativaUseCase } from "./routes/cooperativa/cooperativa-usecase";
 import { PriceUseCase } from "./routes/cooperativa/settings/price/prece-usecase";
+import Driver, { DriverAuthSchema } from "./routes/driver/driver";
 import { DriverUseCase } from "./routes/driver/driver-usecase";
 import { Finds } from "./routes/finds/finds";
 import { Manager, authenticateSchema } from "./routes/manager/manager";
 import { managerUseCase } from "./routes/manager/manager-usecase";
 import { RecolhaUseCase } from "./routes/manager/recolha/recolha-usecase";
-import Driver, { DriverAuthSchema } from "./routes/driver/driver";
-import Client, { ClientAuthSchema } from "./routes/client/client";
-import { ClientUseCase } from "./routes/client/client-usecase";
-import cron from "node-cron";
-import { paymentExpired } from "./middleware/remove-clients";
 
 cron.schedule("0 0 * * *", async () => {
   await paymentExpired();
