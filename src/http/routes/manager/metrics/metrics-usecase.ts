@@ -41,7 +41,7 @@ class MetricsUseCase {
 
       _count: true,
       orderBy: {
-        createdAt: "desc",
+        createdAt: "asc",
       },
     });
 
