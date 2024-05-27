@@ -53,7 +53,7 @@ export class PrismaManagerValidations {
   async telError(tel: string) {
     const result = await db.manager.findUnique({
       where: {
-        tel,
+        tel
       },
     });
     if (result) throw new Error("Telefone já cadastrado");
@@ -200,6 +200,14 @@ export class PrismaAgentValidations {
       },
     });
     if (result) throw new Error("Email Já cadastrado");
+  }
+  async telError(tel: string) {
+    const result = await db.agents.findUnique({
+      where: {
+        tel,
+      },
+    });
+    if (result) throw new Error("Telefone já cadastrado");
   }
   async findOnFilial({ id, filialId }: { id: string; filialId: string }) {
     const result = await db.agents.findUnique({

@@ -62,6 +62,8 @@ class AgentUseCase {
   }
   async create({ email, name, sexo, filialId, tel }: agentData) {
     await prisma.agents.emailError(email);
+    await prisma.agents.telError(tel);
+    
 
     if (
       (await db.agents.count({
