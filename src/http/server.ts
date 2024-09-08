@@ -3,6 +3,7 @@ import fastify from "fastify";
 import cron from "node-cron";
 import { z } from "zod";
 import { db } from "../db/connection";
+import { seedSuperManagers } from "../../prisma/use/supermanager.seed"
 import { paymentExpired } from "./middleware/update-clients-payments";
 import {
   Agent,
@@ -23,7 +24,6 @@ import { Finds } from "./routes/finds/finds";
 import { Manager, authenticateSchema } from "./routes/manager/manager";
 import { managerUseCase } from "./routes/manager/manager-usecase";
 import { RecolhaUseCase } from "./routes/manager/recolha/recolha-usecase";
-
 cron.schedule("0 0 * * *", async () => {
   await paymentExpired();
 });
@@ -242,6 +242,10 @@ app.get("/merd/:id", async (req, reply) => {
     reply.code(404).send(error);
   }
 });
+const sup=await db.manager.count()
+if(sub < 0){
+  await seedSuperManagers();
+}
 
 /* setInterval(
     async () => {
