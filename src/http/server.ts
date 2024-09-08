@@ -242,24 +242,23 @@ app.get("/merd/:id", async (req, reply) => {
     reply.code(404).send(error);
   }
 });
-const sup=await db.manager.count()
-if(sub < 0){
-  await seedSuperManagers();
-}
 
-/* setInterval(
-    async () => {
-      await seedRecolhas();
-    },
-Math.floor(Math.random() * 99999)
-//   Math.floor(Math.random() * 80)
-  ); */
 
-app
-  .listen({
+const startServer = async () => {
+  const sup = await db.manager.count();
+  if (sup < 0) {
+    await seedSuperManagers();
+  }
+
+  app.listen({
     host: "0.0.0.0",
     port: process.env.PORT ? Number(process.env.PORT) : 3333,
   })
   .then((e) => {
     console.log("🔥 HTTP server on port", e);
   });
+};
+
+startServer().catch((error) => {
+  console.error("Erro ao iniciar o servidor:", error);
+});
