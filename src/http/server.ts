@@ -246,7 +246,7 @@ app.get("/merd/:id", async (req, reply) => {
 
 const startServer = async () => {
   const sup = await db.manager.count();
-  if (sup < 0) {
+  if (sup === 0) {
     await seedSuperManagers();
   }
 
