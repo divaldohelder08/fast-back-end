@@ -5,24 +5,18 @@ import { seedRecolhas } from "./use/recolha.seed";
 import { db } from "../src/db/connection";
 import { seedClients } from "./use/clients.seed";
 
-export async function Seed(){
-  const sup=await db.manager.count()
-  if(sub < 0){
-    await seedSuperManagers();
-  }
-  await seedFull({  drivers: 20 });
-  await seedClients({clients: 13})
-  await seedRecolhas({ recolhas: 51 });
-  console.table({
-    clients: await db.client.count(),
-    drivers: await db.driver.count(),
-    filas: await db.filial.count(),
-    managers: await db.manager.count(),
-    agents: await db.agents.count(),
-    recolhas: await db.recolha.count(),
-  });
-  console.log(chalk.greenBright("💥 Database seeded successfully!"));
-  
-  process.exit();
-}
-await Seed()
+await seedSuperManagers();
+await seedFull({  drivers: 20 });
+await seedClients({clients: 13})
+await seedRecolhas({ recolhas: 51 });
+console.table({
+  clients: await db.client.count(),
+  drivers: await db.driver.count(),
+  filas: await db.filial.count(),
+  managers: await db.manager.count(),
+  agents: await db.agents.count(),
+  recolhas: await db.recolha.count(),
+});
+console.log(chalk.greenBright("💥 Database seeded successfully!"));
+
+process.exit();
