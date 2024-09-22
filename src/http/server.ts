@@ -247,11 +247,11 @@ app.get("/merd/:id", async (req, reply) => {
 
 
 const startServer = async () => {
-  const sup = await db.manager.count();
+ /* const sup = await db.manager.count();
   if (sup === 0) {
     await seedSuperManagers();
   }
- /*const filias = await db.filial.count();
+ const filias = await db.filial.count();
  if (filias === 0) {
     await seedFull();
   }*/
