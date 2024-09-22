@@ -251,10 +251,10 @@ const startServer = async () => {
   if (sup === 0) {
     await seedSuperManagers();
   }
- const filias = await db.filial.count();
+ /*const filias = await db.filial.count();
  if (filias === 0) {
     await seedFull();
-  }
+  }*/
   app.listen({
     host: "0.0.0.0",
     port: process.env.PORT ? Number(process.env.PORT) : 3333,
