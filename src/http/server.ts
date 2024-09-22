@@ -4,6 +4,8 @@ import cron from "node-cron";
 import { z } from "zod";
 import { db } from "../db/connection";
 import { seedSuperManagers } from "../../prisma/use/supermanager.seed"
+import { seedFull } from "../../prisma/use/full.seed.ts"
+
 import { paymentExpired } from "./middleware/update-clients-payments";
 import {
   Agent,
@@ -249,7 +251,10 @@ const startServer = async () => {
   if (sup === 0) {
     await seedSuperManagers();
   }
-
+ const filias = await db.filial.count();
+ if (filias === 0) {
+    await seedFull();
+  }
   app.listen({
     host: "0.0.0.0",
     port: process.env.PORT ? Number(process.env.PORT) : 3333,
